@@ -1,0 +1,62 @@
+# Flutter-specific files
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+generated_plugin_registrant.dart
+
+# iOS-specific files
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/Generated.xcconfig
+ios/.symlinks/
+ios/Pods/
+ios/Runner.xcworkspace/
+ios/Runner.xcodeproj/project.xcworkspace/
+ios/Runner.xcodeproj/xcuserdata/
+
+# Android-specific files
+android/.gradle/
+android/.idea/
+android/app/*.iml
+android/local.properties
+android/gradle.properties
+android/app/build/
+
+# Web-specific files
+web/.dart_tool/
+web/build/
+
+# macOS-specific files
+macos/Flutter/ephemeral/
+macos/.flutter-plugins
+macos/.flutter-plugins-dependencies
+macos/.symlinks/
+
+# Windows-specific files
+windows/Flutter/ephemeral/
+
+# Linux-specific files
+linux/Flutter/ephemeral/
+
+# JetBrains IDE files
+.idea/
+*.iml
+*.ipr
+*.iws
+.idea_modules/
+
+# VS Code-specific files
+.vscode/
+
+# Miscellaneous
+*.log
+*.lock
+*.pyc
+.DS_Store
+*.bak
+*.swp
+
+# Packages and dependencies
+pubspec.lock
