@@ -4,7 +4,7 @@ description: "A Mt Diablo project"
 publish_to: 'none'
 
 # Version and build number
-version: 1.0.1
+version: 1.0.2
 
 environment:
   sdk: ">=3.0.0 <4.0.0" # Ensure compatibility with Flutter's latest stable version

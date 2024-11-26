@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false, // Removes the debug banner
       title: 'Mt. Diablo App',
       theme: ThemeData(
         colorScheme: ColorScheme.light(
@@ -43,7 +44,7 @@ class MainScreen extends StatelessWidget {
                 image: AssetImage('assets/icons/background_icon_optimized.jpg'),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.2), // Correct usage
+                  Colors.black.withOpacity(0.2),
                   BlendMode.darken,
                 ),
               ),
@@ -57,47 +58,55 @@ class MainScreen extends StatelessWidget {
                 backgroundColor: Colors.blueGrey[700],
               ),
               Expanded(
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  padding: const EdgeInsets.all(10),
-                  children: [
-                    _buildTile(
-                      context,
-                      'Park Info',
-                      Icons.info,
-                          () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const ParkInfoPage()),
-                      ),
+                child: Align(
+                  alignment: Alignment.bottomCenter, // Move grid lower on the screen
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 50), // Adjust distance from bottom
+                    child: GridView.count(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 15,
+                      crossAxisSpacing: 15,
+                      shrinkWrap: true, // Prevents full scrollable height
+                      children: [
+                        _buildTile(
+                          context,
+                          'Park Info',
+                          Icons.info,
+                              () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const ParkInfoPage()),
+                          ),
+                        ),
+                        _buildTile(
+                          context,
+                          'Park Staff',
+                          Icons.people,
+                              () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const ParkStaffPage()),
+                          ),
+                        ),
+                        _buildTile(
+                          context,
+                          'Cyclists',
+                          Icons.directions_bike,
+                              () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const MtDiabloCyclistsPage()),
+                          ),
+                        ),
+                        _buildTile(
+                          context,
+                          'Weather',
+                          Icons.cloud,
+                              () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const WeatherPage()),
+                          ),
+                        ),
+                      ],
                     ),
-                    _buildTile(
-                      context,
-                      'Park Staff',
-                      Icons.people,
-                          () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const ParkStaffPage()),
-                      ),
-                    ),
-                    _buildTile(
-                      context,
-                      'Mt. Diablo Cyclists',
-                      Icons.directions_bike,
-                          () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const MtDiabloCyclistsPage()),
-                      ),
-                    ),
-                    _buildTile(
-                      context,
-                      'Mt. Diablo Weather',
-                      Icons.cloud,
-                          () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const WeatherPage()),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ],
@@ -116,20 +125,20 @@ class MainScreen extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        color: (Colors.blueGrey[50] ?? Colors.blueGrey).withOpacity(0.9), // Fixed nullability
-        elevation: 5,
-        margin: const EdgeInsets.all(10),
+        color: (Colors.blueGrey[50] ?? Colors.blueGrey).withOpacity(0.9),
+        elevation: 3, // Reduced shadow for a simpler look
+        margin: const EdgeInsets.all(8), // Reduced margin between cards
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 50, color: Colors.blueGrey[700]),
-              const SizedBox(height: 10),
+              Icon(icon, size: 25, color: Colors.blueGrey[700]), // Smaller icon size
+              const SizedBox(height: 5), // Reduced spacing
               Text(
                 title,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  fontSize: 18,
+                  fontSize: 14, // Smaller font size
                   fontWeight: FontWeight.bold,
                 ),
               ),
