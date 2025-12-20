@@ -160,10 +160,17 @@ pod cache clean --all 2>/dev/null || true
 echo "📦 Installing CocoaPods dependencies..."
 pod install --repo-update
 
-# Immediately ensure Release xcfilelist files exist (create them proactively)
+# CRITICAL: Immediately ensure Release xcfilelist files exist (create them proactively)
+# These files MUST exist before Xcode tries to read them
 echo "🔨 Proactively creating Release xcfilelist files..."
 RELEASE_XCFILELIST_DIR="Pods/Target Support Files/Pods-Runner"
 mkdir -p "$RELEASE_XCFILELIST_DIR"
+
+# Ensure directory exists and is writable
+if [ ! -d "$RELEASE_XCFILELIST_DIR" ]; then
+    echo "❌ Error: Failed to create directory: $RELEASE_XCFILELIST_DIR"
+    exit 1
+fi
 
 # List of Release xcfilelist files we need
 RELEASE_FILES=(
@@ -174,32 +181,70 @@ RELEASE_FILES=(
 )
 
 # Create Release files from Debug/Profile templates if they don't exist
+# ALWAYS ensure these files exist, even if pod install created them
 for release_file in "${RELEASE_FILES[@]}"; do
     release_path="$RELEASE_XCFILELIST_DIR/$release_file"
-    if [ ! -f "$release_path" ]; then
+    
+    # Always check and recreate if needed
+    if [ ! -f "$release_path" ] || [ ! -s "$release_path" ]; then
+        echo "📋 Ensuring $release_file exists..."
+        
         # Try Debug first
         debug_file=$(echo "$release_file" | sed 's/-Release-/-Debug-/')
         debug_path="$RELEASE_XCFILELIST_DIR/$debug_file"
-        if [ -f "$debug_path" ]; then
-            echo "📋 Creating $release_file from Debug template..."
+        if [ -f "$debug_path" ] && [ -s "$debug_path" ]; then
+            echo "   Copying from Debug template..."
             cp "$debug_path" "$release_path"
         else
             # Try Profile
             profile_file=$(echo "$release_file" | sed 's/-Release-/-Profile-/')
             profile_path="$RELEASE_XCFILELIST_DIR/$profile_file"
-            if [ -f "$profile_path" ]; then
-                echo "📋 Creating $release_file from Profile template..."
+            if [ -f "$profile_path" ] && [ -s "$profile_path" ]; then
+                echo "   Copying from Profile template..."
                 cp "$profile_path" "$release_path"
             else
-                # Create empty file with at least a newline
-                echo "📋 Creating empty $release_file..."
-                echo "" > "$release_path"
+                # Create file with minimal valid content (xcfilelist can be empty but must exist)
+                echo "   Creating new file..."
+                printf "" > "$release_path"
             fi
         fi
-        # Ensure file is readable
+        
+        # Ensure file exists, is readable, and has proper permissions
+        if [ ! -f "$release_path" ]; then
+            echo "❌ Error: Failed to create $release_path"
+            exit 1
+        fi
+        
+        chmod 644 "$release_path"
+        echo "   ✅ Created: $release_path"
+    else
+        echo "   ✅ Already exists: $release_path"
+    fi
+    
+    # Final verification - file must exist and be readable
+    if [ ! -r "$release_path" ]; then
+        echo "⚠️  Warning: File exists but is not readable, fixing permissions..."
         chmod 644 "$release_path"
     fi
 done
+
+# Verify all files were created successfully
+echo "🔍 Verifying all Release xcfilelist files exist..."
+ALL_CREATED=true
+for release_file in "${RELEASE_FILES[@]}"; do
+    release_path="$RELEASE_XCFILELIST_DIR/$release_file"
+    if [ ! -f "$release_path" ]; then
+        echo "❌ CRITICAL: File still missing: $release_path"
+        ALL_CREATED=false
+    fi
+done
+
+if [ "$ALL_CREATED" = false ]; then
+    echo "❌ Error: Failed to create all required Release xcfilelist files"
+    exit 1
+fi
+
+echo "✅ All Release xcfilelist files verified and ready"
 
 # Ensure Manifest.lock exists and matches Podfile.lock
 MAX_RETRIES=3
