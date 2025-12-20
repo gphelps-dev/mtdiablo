@@ -121,14 +121,42 @@ if ! command -v pod &> /dev/null; then
     echo "📦 Installing CocoaPods..."
     sudo gem install cocoapods 2>/dev/null || gem install cocoapods --user-install
     export PATH="$HOME/.gem/ruby/*/bin:$PATH"
+    # Verify pod is now available
+    if ! command -v pod &> /dev/null; then
+        echo "❌ Error: CocoaPods installation failed"
+        exit 1
+    fi
 fi
 
-# Clean and install pods
+# Remove existing Pods and Manifest.lock to ensure clean install
+echo "🧹 Cleaning existing Pods installation..."
+rm -rf Pods
+rm -f Pods/Manifest.lock
+
+# Clean CocoaPods cache
 echo "🧹 Cleaning CocoaPods cache..."
 pod cache clean --all 2>/dev/null || true
 
+# Install pods (this will regenerate Podfile.lock and Manifest.lock)
 echo "📦 Installing CocoaPods dependencies..."
 pod install --repo-update
+
+# Verify Podfile.lock and Manifest.lock are in sync
+if [ -f "Podfile.lock" ] && [ -f "Pods/Manifest.lock" ]; then
+    if ! diff -q Podfile.lock Pods/Manifest.lock > /dev/null 2>&1; then
+        echo "⚠️  Podfile.lock and Manifest.lock are out of sync, running pod install again..."
+        pod install
+        # Verify again
+        if ! diff -q Podfile.lock Pods/Manifest.lock > /dev/null 2>&1; then
+            echo "❌ Error: Failed to sync Podfile.lock and Manifest.lock"
+            exit 1
+        fi
+    fi
+    echo "✅ Podfile.lock and Manifest.lock are in sync"
+else
+    echo "❌ Error: Podfile.lock or Manifest.lock not found after pod install"
+    exit 1
+fi
 
 # Verify that the required xcfilelist files are created
 echo "🔍 Verifying CocoaPods file lists..."
