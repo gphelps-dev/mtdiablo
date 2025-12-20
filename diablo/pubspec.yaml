@@ -1,33 +1,47 @@
 name: diablo
-description: "A Mt Diablo project"
-# The following line prevents the package from being accidentally published to pub.dev
-publish_to: 'none'
+description: "Mount Diablo Contra Costa County - Official visitor guide and outdoor recreation app."
+publish_to: 'none' # Prevents accidental publishing to pub.dev
 
-# Version and build number
-version: 1.0.2
+version: 1.0.2+1
 
 environment:
-  sdk: ">=3.0.0 <4.0.0" # Ensure compatibility with Flutter's latest stable version
+  sdk: ^3.5.4
 
 dependencies:
   flutter:
     sdk: flutter
+
   cupertino_icons: ^1.0.8
-  url_launcher: ^6.1.7
+  url_launcher: ^6.1.10
+  geolocator: ^10.1.0
+  permission_handler: ^11.0.1
+  http: ^1.1.0
+  path_provider: ^2.1.1
+  shared_preferences: ^2.2.2
+  sqflite: ^2.3.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^4.0.0
   flutter_launcher_icons: ^0.14.1
 
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/icons/app_icon.jpg"
+  image_path: "assets/icons/app_icon.png"
+  min_sdk_android: 21
+  remove_alpha_ios: true
+  web:
+    generate: true
+    image_path: "assets/icons/app_icon.png"
+    background_color: "#1E3A8A"
+    theme_color: "#F59E0B"
 
 flutter:
-  uses-material-design: true
   assets:
-    - assets/icons/app_icon.jpg
-    - assets/icons/background_icon_optimized.jpg
+    - assets/icons/app_icon.png
+    - assets/maps/
+    - assets/trails/
+
+  uses-material-design: true
