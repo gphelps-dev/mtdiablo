@@ -2,7 +2,7 @@ name: diablo
 description: "Mount Diablo Contra Costa County - Official visitor guide and outdoor recreation app."
 publish_to: 'none' # Prevents accidental publishing to pub.dev
 
-version: 1.0.2+1
+version: 1.0.3+1
 
 environment:
   sdk: ^3.5.4
@@ -23,7 +23,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
   flutter_launcher_icons: ^0.14.1
 
 flutter_launcher_icons:

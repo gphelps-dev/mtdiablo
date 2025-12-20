@@ -1,16 +1,73 @@
-# diablo
+# Mount Diablo App
 
-A new Flutter project.
+Official visitor guide and outdoor recreation app for Mount Diablo State Park in Contra Costa County, California.
+
+## Features
+
+- **Trails & Map** - Browse trails, find amenities, get directions
+- **Practical Tools** - Find parking, restrooms, water fountains, and other amenities
+- **Emergency Contacts** - Quick access to park rangers and emergency services with location sharing
+- **Park Info** - Hours, fees, contact information, and conservation details
+- **Events** - Upcoming hikes, outings, and conservation events
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### Prerequisites
 
-A few resources to get you started if this is your first Flutter project:
+- Flutter SDK (3.5.4 or higher)
+- Xcode (for iOS development)
+- Android Studio (for Android development)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Installation
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+cd diablo
+flutter pub get
+```
+
+### Running the App
+
+```bash
+# iOS Simulator
+flutter run -d "iPhone 16 Pro Max"
+
+# Android Emulator
+flutter run -d <device-id>
+
+# macOS
+flutter run -d macos
+```
+
+## Building for Release
+
+### iOS
+
+```bash
+flutter build ios --release
+```
+
+Then open `ios/Runner.xcworkspace` in Xcode to archive and upload to App Store Connect.
+
+### Android
+
+```bash
+flutter build appbundle --release
+```
+
+## App Store Submission
+
+See `APP_STORE_CHECKLIST.md` for detailed submission requirements.
+
+Key requirements:
+- Bundle identifier: `com.gphelps.mtdiablo`
+- Privacy policy URL (required - app collects location data)
+- Support URL
+- Screenshots (see `app_store_assets/` folder)
+
+## Version
+
+Current version: 1.0.3
+
+## License
+
+This project is for Mount Diablo State Park visitor use.

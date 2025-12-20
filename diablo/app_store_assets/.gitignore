@@ -1,0 +1,10 @@
+# Ignore all screenshots and previews (they're large files)
+screenshots/*
+previews/*
+!screenshots/.gitkeep
+!previews/.gitkeep
+
+# But keep the scripts and README
+!*.sh
+!*.md
+
