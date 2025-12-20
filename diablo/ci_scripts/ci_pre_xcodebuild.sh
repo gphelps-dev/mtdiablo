@@ -141,6 +141,47 @@ pod cache clean --all 2>/dev/null || true
 echo "📦 Installing CocoaPods dependencies..."
 pod install --repo-update
 
+# Immediately ensure Release xcfilelist files exist (create them proactively)
+echo "🔨 Proactively creating Release xcfilelist files..."
+RELEASE_XCFILELIST_DIR="Pods/Target Support Files/Pods-Runner"
+mkdir -p "$RELEASE_XCFILELIST_DIR"
+
+# List of Release xcfilelist files we need
+RELEASE_FILES=(
+    "Pods-Runner-resources-Release-input-files.xcfilelist"
+    "Pods-Runner-resources-Release-output-files.xcfilelist"
+    "Pods-Runner-frameworks-Release-input-files.xcfilelist"
+    "Pods-Runner-frameworks-Release-output-files.xcfilelist"
+)
+
+# Create Release files from Debug/Profile templates if they don't exist
+for release_file in "${RELEASE_FILES[@]}"; do
+    release_path="$RELEASE_XCFILELIST_DIR/$release_file"
+    if [ ! -f "$release_path" ]; then
+        # Try Debug first
+        debug_file=$(echo "$release_file" | sed 's/-Release-/-Debug-/')
+        debug_path="$RELEASE_XCFILELIST_DIR/$debug_file"
+        if [ -f "$debug_path" ]; then
+            echo "📋 Creating $release_file from Debug template..."
+            cp "$debug_path" "$release_path"
+        else
+            # Try Profile
+            profile_file=$(echo "$release_file" | sed 's/-Release-/-Profile-/')
+            profile_path="$RELEASE_XCFILELIST_DIR/$profile_file"
+            if [ -f "$profile_path" ]; then
+                echo "📋 Creating $release_file from Profile template..."
+                cp "$profile_path" "$release_path"
+            else
+                # Create empty file with at least a newline
+                echo "📋 Creating empty $release_file..."
+                echo "" > "$release_path"
+            fi
+        fi
+        # Ensure file is readable
+        chmod 644 "$release_path"
+    fi
+done
+
 # Ensure Manifest.lock exists and matches Podfile.lock
 MAX_RETRIES=3
 RETRY_COUNT=0
