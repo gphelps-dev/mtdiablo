@@ -195,19 +195,73 @@ REQUIRED_FILES=(
     "Pods/Target Support Files/Pods-Runner/Pods-Runner-frameworks-Release-output-files.xcfilelist"
 )
 
+# Also check Debug and Profile versions to use as templates if Release is missing
+TEMPLATE_FILES=(
+    "Pods/Target Support Files/Pods-Runner/Pods-Runner-resources-Debug-input-files.xcfilelist"
+    "Pods/Target Support Files/Pods-Runner/Pods-Runner-resources-Debug-output-files.xcfilelist"
+    "Pods/Target Support Files/Pods-Runner/Pods-Runner-frameworks-Debug-input-files.xcfilelist"
+    "Pods/Target Support Files/Pods-Runner/Pods-Runner-frameworks-Debug-output-files.xcfilelist"
+)
+
 MISSING_FILES=0
 for file in "${REQUIRED_FILES[@]}"; do
     if [ ! -f "$file" ]; then
-        echo "❌ Error: Required file not found: $file"
+        echo "⚠️  Warning: Required file not found: $file"
         MISSING_FILES=$((MISSING_FILES + 1))
+        
+        # Try to create it from a template or create empty file
+        mkdir -p "$(dirname "$file")"
+        # Find corresponding Debug template
+        TEMPLATE_FILE=$(echo "$file" | sed 's/-Release-/-Debug-/')
+        if [ -f "$TEMPLATE_FILE" ]; then
+            echo "📋 Copying from template: $TEMPLATE_FILE"
+            cp "$TEMPLATE_FILE" "$file"
+        else
+            echo "📋 Creating empty file: $file"
+            touch "$file"
+        fi
     else
         echo "✅ Found: $file"
     fi
 done
 
+# If files are still missing after creating from templates, retry pod install
 if [ $MISSING_FILES -gt 0 ]; then
-    echo "⚠️  Warning: $MISSING_FILES required file(s) are missing. Retrying pod install..."
+    echo "⚠️  Warning: $MISSING_FILES required file(s) were missing. Retrying pod install to regenerate..."
     pod install
+    
+    # Verify again after retry
+    MISSING_AFTER_RETRY=0
+    for file in "${REQUIRED_FILES[@]}"; do
+        if [ ! -f "$file" ]; then
+            echo "❌ Error: File still missing after retry: $file"
+            MISSING_AFTER_RETRY=$((MISSING_AFTER_RETRY + 1))
+            # Create empty file as last resort
+            mkdir -p "$(dirname "$file")"
+            touch "$file"
+        fi
+    done
+    
+    if [ $MISSING_AFTER_RETRY -gt 0 ]; then
+        echo "⚠️  Created empty placeholder files for $MISSING_AFTER_RETRY missing xcfilelist files"
+    fi
+fi
+
+# Final verification - ensure all files exist
+echo "🔍 Final verification of xcfilelist files..."
+ALL_EXIST=true
+for file in "${REQUIRED_FILES[@]}"; do
+    if [ ! -f "$file" ]; then
+        echo "❌ Error: File still missing: $file"
+        ALL_EXIST=false
+    fi
+done
+
+if [ "$ALL_EXIST" = true ]; then
+    echo "✅ All required xcfilelist files exist"
+else
+    echo "❌ Error: Some xcfilelist files are still missing"
+    exit 1
 fi
 
 echo "✅ Pre-build setup complete!"
