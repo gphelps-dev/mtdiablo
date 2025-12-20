@@ -1,4 +1,4 @@
-package com.example.diablo
+package com.gphelps.mtdiablo
 
 import io.flutter.embedding.android.FlutterActivity
 

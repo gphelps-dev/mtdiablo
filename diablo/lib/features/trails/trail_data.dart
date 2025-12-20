@@ -30,7 +30,7 @@ class TrailData {
     Trail(
       id: 'mitchell-canyon',
       name: 'Mitchell Canyon Trail',
-      description: 'A beautiful canyon trail with oak woodlands and seasonal streams. Great for families.',
+      description: 'Canyon trail with oak trees and seasonal streams. Good for families.',
       distance: 2.5,
       elevationGain: 400,
       difficulty: TrailDifficulty.moderate,
@@ -52,7 +52,7 @@ class TrailData {
     Trail(
       id: 'juniper-trail',
       name: 'Juniper Trail',
-      description: 'A scenic trail through juniper woodlands with excellent views of the surrounding valleys.',
+      description: 'Trail through juniper trees with good valley views.',
       distance: 1.8,
       elevationGain: 300,
       difficulty: TrailDifficulty.easy,
@@ -72,7 +72,7 @@ class TrailData {
     Trail(
       id: 'rock-city',
       name: 'Rock City Trail',
-      description: 'Explore fascinating sandstone formations and rock outcrops. Great for rock climbing and bouldering.',
+      description: 'Sandstone formations and rock outcrops. Popular for climbing and bouldering.',
       distance: 1.2,
       elevationGain: 200,
       difficulty: TrailDifficulty.easy,

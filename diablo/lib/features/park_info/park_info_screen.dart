@@ -45,7 +45,7 @@ class ParkInfoScreen extends StatelessWidget {
       children: [
         _buildInfoCard(
           'About Mount Diablo',
-          'Mount Diablo is a 3,849-foot peak in Contra Costa County, California. It is the centerpiece of Mount Diablo State Park and provides spectacular views of the San Francisco Bay Area.',
+          'Mount Diablo is a 3,849-foot peak in Contra Costa County, California. The centerpiece of Mount Diablo State Park with views of the San Francisco Bay Area.',
           Icons.landscape,
           Colors.green,
         ),
@@ -80,14 +80,14 @@ class ParkInfoScreen extends StatelessWidget {
       children: [
         _buildInfoCard(
           'Save Mount Diablo',
-          'Since 1971, Save Mount Diablo has preserved over 120,000 acres of wild lands around Mount Diablo - an area bigger than Point Reyes National Seashore.',
+          'Since 1971, Save Mount Diablo has preserved over 120,000 acres around Mount Diablo - bigger than Point Reyes National Seashore.',
           Icons.eco,
           Colors.green,
         ),
         const SizedBox(height: 16),
         _buildInfoCard(
           'Conservation Mission',
-          'Our mission is to forever preserve the remaining natural lands on and around Mount Diablo, and to protect Mount Diablo\'s connection to its sustaining Diablo Range.',
+          'Preserve the remaining natural lands on and around Mount Diablo, and protect Mount Diablo\'s connection to the Diablo Range.',
           Icons.nature,
           Colors.green,
         ),
@@ -117,7 +117,7 @@ class ParkInfoScreen extends StatelessWidget {
         _buildEventCard(
           'Mangini Ranch Meditation Hike',
           'August 2nd, 2025\n7:00 AM - 10:00 AM',
-          'Join Save Mount Diablo on a meditation journey through Mangini Ranch!',
+          'Meditation hike through Mangini Ranch.',
           Icons.self_improvement,
           Colors.purple,
         ),
@@ -125,7 +125,7 @@ class ParkInfoScreen extends StatelessWidget {
         _buildEventCard(
           'Hit the Trails – Mountain Biking',
           'August 15th, 2025\n9:00 AM - 12:00 PM',
-          'Come explore the beautiful trails from Smith Canyon into Mount Diablo\'s beautiful Curry Canyon via mountain bike.',
+          'Mountain bike ride from Smith Canyon to Curry Canyon.',
           Icons.directions_bike,
           Colors.orange,
         ),
@@ -133,7 +133,7 @@ class ParkInfoScreen extends StatelessWidget {
         _buildEventCard(
           'Plein Air Painting Hike',
           'August 23rd, 2025\n10:00 AM - 1:00 PM',
-          'Join Save Mount Diablo for a beautiful evening of plein air painting on Curry Canyon Ranch.',
+          'Plein air painting hike on Curry Canyon Ranch.',
           Icons.brush,
           Colors.blue,
         ),

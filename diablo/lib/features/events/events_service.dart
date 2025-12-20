@@ -17,7 +17,7 @@ class EventsService {
       Event(
         id: '1',
         title: 'Mangini Ranch Meditation Hike',
-        description: 'Join Save Mount Diablo on a meditation journey through Mangini Ranch! Experience the peaceful beauty of the preserve while practicing mindfulness in nature.',
+        description: 'Meditation hike through Mangini Ranch. Practice mindfulness while exploring the preserve.',
         date: now.add(const Duration(days: 7)),
         timeRange: '7:00 AM - 10:00 AM',
         category: 'Meditation',
@@ -26,7 +26,7 @@ class EventsService {
       Event(
         id: '2',
         title: 'Hit the Trails – Mountain Biking',
-        description: 'Come explore the beautiful trails from Smith Canyon into Mount Diablo\'s beautiful Curry Canyon via mountain bike. Experience the thrill of mountain biking in the Diablo Range.',
+        description: 'Mountain bike ride from Smith Canyon to Curry Canyon. Explore trails in the Diablo Range.',
         date: now.add(const Duration(days: 14)),
         timeRange: '9:00 AM - 12:00 PM',
         category: 'Mountain Biking',
@@ -35,7 +35,7 @@ class EventsService {
       Event(
         id: '3',
         title: 'Plein Air Painting Hike',
-        description: 'Join Save Mount Diablo for a beautiful evening of plein air painting on Curry Canyon Ranch. Capture the stunning landscapes of the Diablo Range through art.',
+        description: 'Plein air painting hike on Curry Canyon Ranch. Paint the Diablo Range landscapes.',
         date: now.add(const Duration(days: 21)),
         timeRange: '10:00 AM - 1:00 PM',
         category: 'Art',
@@ -44,7 +44,7 @@ class EventsService {
       Event(
         id: '4',
         title: 'Diablo Restoration Team (DiRT) Workday',
-        description: 'Help restore native habitats and maintain trails in the Diablo Range. Learn about native plants and conservation while making a difference.',
+        description: 'Volunteer workday to restore habitats and maintain trails. Learn about native plants.',
         date: now.add(const Duration(days: 28)),
         timeRange: '9:00 AM - 2:00 PM',
         category: 'Stewardship',
@@ -53,7 +53,7 @@ class EventsService {
       Event(
         id: '5',
         title: 'BioBlitz: Wildlife Survey',
-        description: 'Join scientists and naturalists for a day of wildlife observation and data collection. Help document the biodiversity of Mount Diablo.',
+        description: 'Wildlife survey with scientists and naturalists. Help document Mount Diablo biodiversity.',
         date: now.add(const Duration(days: 35)),
         timeRange: '8:00 AM - 4:00 PM',
         category: 'BioBlitz',
@@ -62,7 +62,7 @@ class EventsService {
       Event(
         id: '6',
         title: 'Discover Diablo: Geology Hike',
-        description: 'Learn about the fascinating geology of Mount Diablo with expert guides. Discover how the mountain was formed and its unique rock formations.',
+        description: 'Geology hike with expert guides. Learn how Mount Diablo was formed and see unique rock formations.',
         date: now.add(const Duration(days: 42)),
         timeRange: '10:00 AM - 3:00 PM',
         category: 'Education',
@@ -71,7 +71,7 @@ class EventsService {
       Event(
         id: '7',
         title: 'Weekend Nature Walk',
-        description: 'Join us for a guided nature walk through Mount Diablo State Park. Perfect for families and nature enthusiasts of all ages.',
+        description: 'Guided nature walk through Mount Diablo State Park. Good for families.',
         date: now.add(const Duration(days: 3)),
         timeRange: '9:00 AM - 11:00 AM',
         category: 'Hiking',
@@ -80,7 +80,7 @@ class EventsService {
       Event(
         id: '8',
         title: 'Sunset Photography Workshop',
-        description: 'Capture stunning sunset views from Mount Diablo summit. Learn photography techniques while enjoying breathtaking scenery.',
+        description: 'Sunset photography workshop at the summit. Learn techniques and enjoy the views.',
         date: now.add(const Duration(days: 10)),
         timeRange: '5:00 PM - 8:00 PM',
         category: 'Art',
