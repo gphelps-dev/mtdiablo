@@ -54,10 +54,133 @@ flutter pub get
 echo "🔨 Generating Flutter iOS files..."
 flutter precache --ios
 
+# Generate Flutter files needed for macOS build
+echo "🔨 Generating Flutter macOS files..."
+flutter precache --macos
+
+# Ensure Generated.xcconfig exists before running pod install
+echo "🔍 Verifying Flutter Generated.xcconfig..."
+if [ ! -f "ios/Flutter/Generated.xcconfig" ]; then
+    echo "⚠️  iOS Generated.xcconfig not found, generating it..."
+    flutter build ios --config-only --no-codesign || flutter build ios --config-only
+fi
+
+# Ensure macOS ephemeral files exist
+echo "🔍 Verifying Flutter macOS ephemeral files..."
+if [ ! -f "macos/Flutter/ephemeral/Flutter-Generated.xcconfig" ]; then
+    echo "⚠️  macOS Flutter-Generated.xcconfig not found, generating it..."
+    flutter build macos --config-only 2>/dev/null || true
+fi
+
+# Ensure macOS xcfilelist files exist and are properly generated
+echo "🔍 Verifying macOS xcfilelist files..."
+cd macos
+mkdir -p Flutter/ephemeral
+
+# Get FLUTTER_ROOT from Flutter-Generated.xcconfig if it exists
+if [ -f "Flutter/ephemeral/Flutter-Generated.xcconfig" ]; then
+    FLUTTER_ROOT=$(grep "^FLUTTER_ROOT=" Flutter/ephemeral/Flutter-Generated.xcconfig | cut -d'=' -f2 | tr -d '"' | tr -d ' ')
+    export FLUTTER_ROOT
+fi
+
+# If FLUTTER_ROOT is not set, try to get it from flutter command
+if [ -z "$FLUTTER_ROOT" ]; then
+    FLUTTER_ROOT=$(flutter doctor -v 2>/dev/null | grep "Flutter SDK at" | awk '{print $4}' | head -1)
+    export FLUTTER_ROOT
+fi
+
+# Generate the xcfilelist files using Flutter's macos_assemble script
+if [ -n "$FLUTTER_ROOT" ] && [ -f "$FLUTTER_ROOT/packages/flutter_tools/bin/macos_assemble.sh" ]; then
+    echo "🔨 Running macos_assemble.sh to generate xcfilelist files..."
+    PROJECT_DIR=$(pwd)
+    export PROJECT_DIR
+    "$FLUTTER_ROOT/packages/flutter_tools/bin/macos_assemble.sh" 2>/dev/null || true
+else
+    echo "⚠️  FLUTTER_ROOT not found, creating placeholder xcfilelist files..."
+    # Create minimal valid xcfilelist files (empty but valid)
+    echo "" > Flutter/ephemeral/FlutterInputs.xcfilelist
+    echo "" > Flutter/ephemeral/FlutterOutputs.xcfilelist
+fi
+
+# Verify files exist
+if [ ! -f "Flutter/ephemeral/FlutterInputs.xcfilelist" ]; then
+    echo "" > Flutter/ephemeral/FlutterInputs.xcfilelist
+fi
+if [ ! -f "Flutter/ephemeral/FlutterOutputs.xcfilelist" ]; then
+    echo "" > Flutter/ephemeral/FlutterOutputs.xcfilelist
+fi
+
+cd ..
+
 # Install CocoaPods dependencies
 echo "🍫 Running pod install..."
 cd ios
-pod install
+
+# Ensure CocoaPods is available
+if ! command -v pod &> /dev/null; then
+    echo "📦 Installing CocoaPods..."
+    sudo gem install cocoapods 2>/dev/null || gem install cocoapods --user-install
+    export PATH="$HOME/.gem/ruby/*/bin:$PATH"
+    # Verify pod is now available
+    if ! command -v pod &> /dev/null; then
+        echo "❌ Error: CocoaPods installation failed"
+        exit 1
+    fi
+fi
+
+# Remove existing Pods and Manifest.lock to ensure clean install
+echo "🧹 Cleaning existing Pods installation..."
+rm -rf Pods
+rm -f Pods/Manifest.lock
+
+# Clean CocoaPods cache
+echo "🧹 Cleaning CocoaPods cache..."
+pod cache clean --all 2>/dev/null || true
+
+# Install pods (this will regenerate Podfile.lock and Manifest.lock)
+echo "📦 Installing CocoaPods dependencies..."
+pod install --repo-update
+
+# Verify Podfile.lock and Manifest.lock are in sync
+if [ -f "Podfile.lock" ] && [ -f "Pods/Manifest.lock" ]; then
+    if ! diff -q Podfile.lock Pods/Manifest.lock > /dev/null 2>&1; then
+        echo "⚠️  Podfile.lock and Manifest.lock are out of sync, running pod install again..."
+        pod install
+        # Verify again
+        if ! diff -q Podfile.lock Pods/Manifest.lock > /dev/null 2>&1; then
+            echo "❌ Error: Failed to sync Podfile.lock and Manifest.lock"
+            exit 1
+        fi
+    fi
+    echo "✅ Podfile.lock and Manifest.lock are in sync"
+else
+    echo "❌ Error: Podfile.lock or Manifest.lock not found after pod install"
+    exit 1
+fi
+
+# Verify that the required xcfilelist files are created
+echo "🔍 Verifying CocoaPods file lists..."
+REQUIRED_FILES=(
+    "Pods/Target Support Files/Pods-Runner/Pods-Runner-resources-Release-input-files.xcfilelist"
+    "Pods/Target Support Files/Pods-Runner/Pods-Runner-resources-Release-output-files.xcfilelist"
+    "Pods/Target Support Files/Pods-Runner/Pods-Runner-frameworks-Release-input-files.xcfilelist"
+    "Pods/Target Support Files/Pods-Runner/Pods-Runner-frameworks-Release-output-files.xcfilelist"
+)
+
+MISSING_FILES=0
+for file in "${REQUIRED_FILES[@]}"; do
+    if [ ! -f "$file" ]; then
+        echo "❌ Error: Required file not found: $file"
+        MISSING_FILES=$((MISSING_FILES + 1))
+    else
+        echo "✅ Found: $file"
+    fi
+done
+
+if [ $MISSING_FILES -gt 0 ]; then
+    echo "⚠️  Warning: $MISSING_FILES required file(s) are missing. Retrying pod install..."
+    pod install
+fi
 
 echo "✅ Pre-build setup complete!"
 
