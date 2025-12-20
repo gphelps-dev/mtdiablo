@@ -158,7 +158,14 @@ pod cache clean --all 2>/dev/null || true
 
 # Install pods (this will regenerate Podfile.lock and Manifest.lock)
 echo "📦 Installing CocoaPods dependencies..."
+# Use --repo-update to ensure we have latest specs, and ensure Release config is generated
 pod install --repo-update
+
+# Force CocoaPods to generate Release configuration files
+# Sometimes CocoaPods doesn't generate Release xcfilelist files by default
+echo "🔨 Ensuring Release configuration is generated..."
+# Try to trigger Release build configuration generation
+xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Release -showBuildSettings > /dev/null 2>&1 || true
 
 # CRITICAL: Immediately ensure Release xcfilelist files exist (create them proactively)
 # These files MUST exist before Xcode tries to read them
