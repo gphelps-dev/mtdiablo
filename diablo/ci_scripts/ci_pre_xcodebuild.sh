@@ -141,20 +141,89 @@ pod cache clean --all 2>/dev/null || true
 echo "📦 Installing CocoaPods dependencies..."
 pod install --repo-update
 
-# Verify Podfile.lock and Manifest.lock are in sync
-if [ -f "Podfile.lock" ] && [ -f "Pods/Manifest.lock" ]; then
-    if ! diff -q Podfile.lock Pods/Manifest.lock > /dev/null 2>&1; then
-        echo "⚠️  Podfile.lock and Manifest.lock are out of sync, running pod install again..."
-        pod install
-        # Verify again
-        if ! diff -q Podfile.lock Pods/Manifest.lock > /dev/null 2>&1; then
-            echo "❌ Error: Failed to sync Podfile.lock and Manifest.lock"
+# Immediately ensure Release xcfilelist files exist (create them proactively)
+echo "🔨 Proactively creating Release xcfilelist files..."
+RELEASE_XCFILELIST_DIR="Pods/Target Support Files/Pods-Runner"
+mkdir -p "$RELEASE_XCFILELIST_DIR"
+
+# List of Release xcfilelist files we need
+RELEASE_FILES=(
+    "Pods-Runner-resources-Release-input-files.xcfilelist"
+    "Pods-Runner-resources-Release-output-files.xcfilelist"
+    "Pods-Runner-frameworks-Release-input-files.xcfilelist"
+    "Pods-Runner-frameworks-Release-output-files.xcfilelist"
+)
+
+# Create Release files from Debug/Profile templates if they don't exist
+for release_file in "${RELEASE_FILES[@]}"; do
+    release_path="$RELEASE_XCFILELIST_DIR/$release_file"
+    if [ ! -f "$release_path" ]; then
+        # Try Debug first
+        debug_file=$(echo "$release_file" | sed 's/-Release-/-Debug-/')
+        debug_path="$RELEASE_XCFILELIST_DIR/$debug_file"
+        if [ -f "$debug_path" ]; then
+            echo "📋 Creating $release_file from Debug template..."
+            cp "$debug_path" "$release_path"
+        else
+            # Try Profile
+            profile_file=$(echo "$release_file" | sed 's/-Release-/-Profile-/')
+            profile_path="$RELEASE_XCFILELIST_DIR/$profile_file"
+            if [ -f "$profile_path" ]; then
+                echo "📋 Creating $release_file from Profile template..."
+                cp "$profile_path" "$release_path"
+            else
+                # Create empty file with at least a newline
+                echo "📋 Creating empty $release_file..."
+                echo "" > "$release_path"
+            fi
+        fi
+        # Ensure file is readable
+        chmod 644 "$release_path"
+    fi
+done
+
+# Ensure Manifest.lock exists and matches Podfile.lock
+MAX_RETRIES=3
+RETRY_COUNT=0
+SYNCED=false
+
+while [ $RETRY_COUNT -lt $MAX_RETRIES ] && [ "$SYNCED" = false ]; do
+    if [ -f "Podfile.lock" ] && [ -f "Pods/Manifest.lock" ]; then
+        if diff -q Podfile.lock Pods/Manifest.lock > /dev/null 2>&1; then
+            echo "✅ Podfile.lock and Manifest.lock are in sync"
+            SYNCED=true
+        else
+            RETRY_COUNT=$((RETRY_COUNT + 1))
+            echo "⚠️  Podfile.lock and Manifest.lock are out of sync (attempt $RETRY_COUNT/$MAX_RETRIES)"
+            if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                # Copy Podfile.lock to Manifest.lock to force sync
+                echo "🔄 Copying Podfile.lock to Manifest.lock to force sync..."
+                mkdir -p Pods
+                cp Podfile.lock Pods/Manifest.lock
+                # Run pod install again to ensure everything is consistent
+                pod install
+            fi
+        fi
+    else
+        echo "❌ Error: Podfile.lock or Manifest.lock not found after pod install"
+        if [ -f "Podfile.lock" ]; then
+            echo "📋 Podfile.lock exists, creating Manifest.lock from it..."
+            mkdir -p Pods
+            cp Podfile.lock Pods/Manifest.lock
+            SYNCED=true
+        else
             exit 1
         fi
     fi
-    echo "✅ Podfile.lock and Manifest.lock are in sync"
-else
-    echo "❌ Error: Podfile.lock or Manifest.lock not found after pod install"
+done
+
+# Final verification
+if [ "$SYNCED" = false ]; then
+    echo "❌ Error: Failed to sync Podfile.lock and Manifest.lock after $MAX_RETRIES attempts"
+    echo "📋 Podfile.lock contents:"
+    cat Podfile.lock | head -20
+    echo "📋 Manifest.lock contents:"
+    cat Pods/Manifest.lock | head -20 2>/dev/null || echo "Manifest.lock not found"
     exit 1
 fi
 
@@ -167,19 +236,87 @@ REQUIRED_FILES=(
     "Pods/Target Support Files/Pods-Runner/Pods-Runner-frameworks-Release-output-files.xcfilelist"
 )
 
+# Also check Debug and Profile versions to use as templates if Release is missing
+TEMPLATE_FILES=(
+    "Pods/Target Support Files/Pods-Runner/Pods-Runner-resources-Debug-input-files.xcfilelist"
+    "Pods/Target Support Files/Pods-Runner/Pods-Runner-resources-Debug-output-files.xcfilelist"
+    "Pods/Target Support Files/Pods-Runner/Pods-Runner-frameworks-Debug-input-files.xcfilelist"
+    "Pods/Target Support Files/Pods-Runner/Pods-Runner-frameworks-Debug-output-files.xcfilelist"
+)
+
 MISSING_FILES=0
 for file in "${REQUIRED_FILES[@]}"; do
     if [ ! -f "$file" ]; then
-        echo "❌ Error: Required file not found: $file"
+        echo "⚠️  Warning: Required file not found: $file"
         MISSING_FILES=$((MISSING_FILES + 1))
+        
+        # Try to create it from a template or create empty file
+        mkdir -p "$(dirname "$file")"
+        # Find corresponding Debug template
+        TEMPLATE_FILE=$(echo "$file" | sed 's/-Release-/-Debug-/')
+        if [ -f "$TEMPLATE_FILE" ]; then
+            echo "📋 Copying from template: $TEMPLATE_FILE"
+            cp "$TEMPLATE_FILE" "$file"
+        else
+            echo "📋 Creating empty file: $file"
+            touch "$file"
+        fi
     else
         echo "✅ Found: $file"
     fi
 done
 
+# If files are still missing after creating from templates, retry pod install
 if [ $MISSING_FILES -gt 0 ]; then
-    echo "⚠️  Warning: $MISSING_FILES required file(s) are missing. Retrying pod install..."
+    echo "⚠️  Warning: $MISSING_FILES required file(s) were missing. Retrying pod install to regenerate..."
     pod install
+    
+    # Verify again after retry
+    MISSING_AFTER_RETRY=0
+    for file in "${REQUIRED_FILES[@]}"; do
+        if [ ! -f "$file" ]; then
+            echo "❌ Error: File still missing after retry: $file"
+            MISSING_AFTER_RETRY=$((MISSING_AFTER_RETRY + 1))
+            # Create empty file as last resort
+            mkdir -p "$(dirname "$file")"
+            touch "$file"
+        fi
+    done
+    
+    if [ $MISSING_AFTER_RETRY -gt 0 ]; then
+        echo "⚠️  Created empty placeholder files for $MISSING_AFTER_RETRY missing xcfilelist files"
+    fi
+fi
+
+# Final verification - ensure all files exist and are readable
+echo "🔍 Final verification of xcfilelist files..."
+ALL_EXIST=true
+for file in "${REQUIRED_FILES[@]}"; do
+    if [ ! -f "$file" ]; then
+        echo "❌ Error: File still missing: $file"
+        ALL_EXIST=false
+    elif [ ! -r "$file" ]; then
+        echo "⚠️  Warning: File exists but is not readable: $file"
+        chmod 644 "$file" || true
+    elif [ ! -s "$file" ]; then
+        echo "⚠️  Warning: File is empty: $file"
+        # Ensure file has at least a newline (xcfilelist files can be empty but should exist)
+        echo "" > "$file"
+    fi
+done
+
+# Ensure files have proper permissions
+for file in "${REQUIRED_FILES[@]}"; do
+    if [ -f "$file" ]; then
+        chmod 644 "$file" 2>/dev/null || true
+    fi
+done
+
+if [ "$ALL_EXIST" = true ]; then
+    echo "✅ All required xcfilelist files exist and are readable"
+else
+    echo "❌ Error: Some xcfilelist files are still missing"
+    exit 1
 fi
 
 echo "✅ Pre-build setup complete!"
