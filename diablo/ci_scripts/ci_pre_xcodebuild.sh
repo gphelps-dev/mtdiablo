@@ -247,18 +247,32 @@ if [ $MISSING_FILES -gt 0 ]; then
     fi
 fi
 
-# Final verification - ensure all files exist
+# Final verification - ensure all files exist and are readable
 echo "🔍 Final verification of xcfilelist files..."
 ALL_EXIST=true
 for file in "${REQUIRED_FILES[@]}"; do
     if [ ! -f "$file" ]; then
         echo "❌ Error: File still missing: $file"
         ALL_EXIST=false
+    elif [ ! -r "$file" ]; then
+        echo "⚠️  Warning: File exists but is not readable: $file"
+        chmod 644 "$file" || true
+    elif [ ! -s "$file" ]; then
+        echo "⚠️  Warning: File is empty: $file"
+        # Ensure file has at least a newline (xcfilelist files can be empty but should exist)
+        echo "" > "$file"
+    fi
+done
+
+# Ensure files have proper permissions
+for file in "${REQUIRED_FILES[@]}"; do
+    if [ -f "$file" ]; then
+        chmod 644 "$file" 2>/dev/null || true
     fi
 done
 
 if [ "$ALL_EXIST" = true ]; then
-    echo "✅ All required xcfilelist files exist"
+    echo "✅ All required xcfilelist files exist and are readable"
 else
     echo "❌ Error: Some xcfilelist files are still missing"
     exit 1
