@@ -69,20 +69,48 @@ fi
 echo "🔍 Verifying Flutter macOS ephemeral files..."
 if [ ! -f "macos/Flutter/ephemeral/Flutter-Generated.xcconfig" ]; then
     echo "⚠️  macOS Flutter-Generated.xcconfig not found, generating it..."
-    flutter build macos --config-only || true
+    flutter build macos --config-only 2>/dev/null || true
 fi
 
-# Ensure macOS xcfilelist files exist
-if [ ! -f "macos/Flutter/ephemeral/FlutterInputs.xcfilelist" ] || [ ! -f "macos/Flutter/ephemeral/FlutterOutputs.xcfilelist" ]; then
-    echo "⚠️  macOS xcfilelist files not found, generating them..."
-    cd macos
-    mkdir -p Flutter/ephemeral
-    touch Flutter/ephemeral/FlutterInputs.xcfilelist
-    touch Flutter/ephemeral/FlutterOutputs.xcfilelist
-    cd ..
-    # Try to generate them properly
-    flutter build macos --config-only || true
+# Ensure macOS xcfilelist files exist and are properly generated
+echo "🔍 Verifying macOS xcfilelist files..."
+cd macos
+mkdir -p Flutter/ephemeral
+
+# Get FLUTTER_ROOT from Flutter-Generated.xcconfig if it exists
+if [ -f "Flutter/ephemeral/Flutter-Generated.xcconfig" ]; then
+    FLUTTER_ROOT=$(grep "^FLUTTER_ROOT=" Flutter/ephemeral/Flutter-Generated.xcconfig | cut -d'=' -f2 | tr -d '"' | tr -d ' ')
+    export FLUTTER_ROOT
 fi
+
+# If FLUTTER_ROOT is not set, try to get it from flutter command
+if [ -z "$FLUTTER_ROOT" ]; then
+    FLUTTER_ROOT=$(flutter doctor -v 2>/dev/null | grep "Flutter SDK at" | awk '{print $4}' | head -1)
+    export FLUTTER_ROOT
+fi
+
+# Generate the xcfilelist files using Flutter's macos_assemble script
+if [ -n "$FLUTTER_ROOT" ] && [ -f "$FLUTTER_ROOT/packages/flutter_tools/bin/macos_assemble.sh" ]; then
+    echo "🔨 Running macos_assemble.sh to generate xcfilelist files..."
+    PROJECT_DIR=$(pwd)
+    export PROJECT_DIR
+    "$FLUTTER_ROOT/packages/flutter_tools/bin/macos_assemble.sh" 2>/dev/null || true
+else
+    echo "⚠️  FLUTTER_ROOT not found, creating placeholder xcfilelist files..."
+    # Create minimal valid xcfilelist files (empty but valid)
+    echo "" > Flutter/ephemeral/FlutterInputs.xcfilelist
+    echo "" > Flutter/ephemeral/FlutterOutputs.xcfilelist
+fi
+
+# Verify files exist
+if [ ! -f "Flutter/ephemeral/FlutterInputs.xcfilelist" ]; then
+    echo "" > Flutter/ephemeral/FlutterInputs.xcfilelist
+fi
+if [ ! -f "Flutter/ephemeral/FlutterOutputs.xcfilelist" ]; then
+    echo "" > Flutter/ephemeral/FlutterOutputs.xcfilelist
+fi
+
+cd ..
 
 # Install CocoaPods dependencies
 echo "🍫 Running pod install..."
