@@ -54,11 +54,34 @@ flutter pub get
 echo "🔨 Generating Flutter iOS files..."
 flutter precache --ios
 
+# Generate Flutter files needed for macOS build
+echo "🔨 Generating Flutter macOS files..."
+flutter precache --macos
+
 # Ensure Generated.xcconfig exists before running pod install
 echo "🔍 Verifying Flutter Generated.xcconfig..."
 if [ ! -f "ios/Flutter/Generated.xcconfig" ]; then
-    echo "⚠️  Generated.xcconfig not found, generating it..."
+    echo "⚠️  iOS Generated.xcconfig not found, generating it..."
     flutter build ios --config-only --no-codesign || flutter build ios --config-only
+fi
+
+# Ensure macOS ephemeral files exist
+echo "🔍 Verifying Flutter macOS ephemeral files..."
+if [ ! -f "macos/Flutter/ephemeral/Flutter-Generated.xcconfig" ]; then
+    echo "⚠️  macOS Flutter-Generated.xcconfig not found, generating it..."
+    flutter build macos --config-only || true
+fi
+
+# Ensure macOS xcfilelist files exist
+if [ ! -f "macos/Flutter/ephemeral/FlutterInputs.xcfilelist" ] || [ ! -f "macos/Flutter/ephemeral/FlutterOutputs.xcfilelist" ]; then
+    echo "⚠️  macOS xcfilelist files not found, generating them..."
+    cd macos
+    mkdir -p Flutter/ephemeral
+    touch Flutter/ephemeral/FlutterInputs.xcfilelist
+    touch Flutter/ephemeral/FlutterOutputs.xcfilelist
+    cd ..
+    # Try to generate them properly
+    flutter build macos --config-only || true
 fi
 
 # Install CocoaPods dependencies
