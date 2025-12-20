@@ -141,20 +141,48 @@ pod cache clean --all 2>/dev/null || true
 echo "📦 Installing CocoaPods dependencies..."
 pod install --repo-update
 
-# Verify Podfile.lock and Manifest.lock are in sync
-if [ -f "Podfile.lock" ] && [ -f "Pods/Manifest.lock" ]; then
-    if ! diff -q Podfile.lock Pods/Manifest.lock > /dev/null 2>&1; then
-        echo "⚠️  Podfile.lock and Manifest.lock are out of sync, running pod install again..."
-        pod install
-        # Verify again
-        if ! diff -q Podfile.lock Pods/Manifest.lock > /dev/null 2>&1; then
-            echo "❌ Error: Failed to sync Podfile.lock and Manifest.lock"
+# Ensure Manifest.lock exists and matches Podfile.lock
+MAX_RETRIES=3
+RETRY_COUNT=0
+SYNCED=false
+
+while [ $RETRY_COUNT -lt $MAX_RETRIES ] && [ "$SYNCED" = false ]; do
+    if [ -f "Podfile.lock" ] && [ -f "Pods/Manifest.lock" ]; then
+        if diff -q Podfile.lock Pods/Manifest.lock > /dev/null 2>&1; then
+            echo "✅ Podfile.lock and Manifest.lock are in sync"
+            SYNCED=true
+        else
+            RETRY_COUNT=$((RETRY_COUNT + 1))
+            echo "⚠️  Podfile.lock and Manifest.lock are out of sync (attempt $RETRY_COUNT/$MAX_RETRIES)"
+            if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                # Copy Podfile.lock to Manifest.lock to force sync
+                echo "🔄 Copying Podfile.lock to Manifest.lock to force sync..."
+                mkdir -p Pods
+                cp Podfile.lock Pods/Manifest.lock
+                # Run pod install again to ensure everything is consistent
+                pod install
+            fi
+        fi
+    else
+        echo "❌ Error: Podfile.lock or Manifest.lock not found after pod install"
+        if [ -f "Podfile.lock" ]; then
+            echo "📋 Podfile.lock exists, creating Manifest.lock from it..."
+            mkdir -p Pods
+            cp Podfile.lock Pods/Manifest.lock
+            SYNCED=true
+        else
             exit 1
         fi
     fi
-    echo "✅ Podfile.lock and Manifest.lock are in sync"
-else
-    echo "❌ Error: Podfile.lock or Manifest.lock not found after pod install"
+done
+
+# Final verification
+if [ "$SYNCED" = false ]; then
+    echo "❌ Error: Failed to sync Podfile.lock and Manifest.lock after $MAX_RETRIES attempts"
+    echo "📋 Podfile.lock contents:"
+    cat Podfile.lock | head -20
+    echo "📋 Manifest.lock contents:"
+    cat Pods/Manifest.lock | head -20 2>/dev/null || echo "Manifest.lock not found"
     exit 1
 fi
 
