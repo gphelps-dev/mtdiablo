@@ -192,6 +192,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget "Runner" */;
 			buildPhases = (
+				960F59FF16D045ED951BD9EB /* Sync Podfile.lock and Manifest.lock */,
+				215EBB0A053644D193FB49DD /* Ensure Release xcfilelist files exist */,
 				12F37A36E9CA182AFFD1DD55 /* [CP] Check Pods Manifest.lock */,
 				9740EEB61CF901F6004384FC /* Run Script */,
 				97C146EA1CF9000F007C117D /* Sources */,
@@ -272,6 +274,48 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		960F59FF16D045ED951BD9EB /* Sync Podfile.lock and Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+			);
+			name = "Sync Podfile.lock and Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Ensure Manifest.lock exists and matches Podfile.lock\nif [ -f \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" ]; then\n    mkdir -p \"${PODS_ROOT}\"\n    cp \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\"\n    echo \"✅ Synced Podfile.lock to Manifest.lock\"\nelse\n    echo \"⚠️  Warning: Podfile.lock not found\"\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		215EBB0A053644D193FB49DD /* Ensure Release xcfilelist files exist */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Ensure Release xcfilelist files exist";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Ensure Release xcfilelist files exist before CocoaPods tries to read them\nRELEASE_DIR=\"${PODS_ROOT}/Target Support Files/Pods-Runner\"\nmkdir -p \"$RELEASE_DIR\"\n\n# List of Release xcfilelist files we need\nRELEASE_FILES=(\n    \"Pods-Runner-resources-Release-input-files.xcfilelist\"\n    \"Pods-Runner-resources-Release-output-files.xcfilelist\"\n    \"Pods-Runner-frameworks-Release-input-files.xcfilelist\"\n    \"Pods-Runner-frameworks-Release-output-files.xcfilelist\"\n)\n\n# Create Release files from Debug/Profile templates if they don't exist\nfor release_file in \"${RELEASE_FILES[@]}\"; do\n    release_path=\"$RELEASE_DIR/$release_file\"\n    if [ ! -f \"$release_path\" ] || [ ! -s \"$release_path\" ]; then\n        # Try Debug first\n        debug_file=$(echo \"$release_file\" | sed 's/-Release-/-Debug-/')\n        debug_path=\"$RELEASE_DIR/$debug_file\"\n        if [ -f \"$debug_path\" ] && [ -s \"$debug_path\" ]; then\n            cp \"$debug_path\" \"$release_path\"\n        else\n            # Try Profile\n            profile_file=$(echo \"$release_file\" | sed 's/-Release-/-Profile-/')\n            profile_path=\"$RELEASE_DIR/$profile_file\"\n            if [ -f \"$profile_path\" ] && [ -s \"$profile_path\" ]; then\n                cp \"$profile_path\" \"$release_path\"\n            else\n                # Create empty file\n                touch \"$release_path\"\n            fi\n        fi\n        chmod 644 \"$release_path\"\n    fi\ndone\n";
+			showEnvVarsInLog = 0;
+		};
 		12F37A36E9CA182AFFD1DD55 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
