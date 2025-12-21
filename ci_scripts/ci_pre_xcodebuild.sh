@@ -123,6 +123,22 @@ if [ -f "Podfile" ]; then
         bash create_flutter_headers_symlink.sh 2>/dev/null || true
     fi
     
+    # Clean macOS Pods before install
+    echo "🧹 Cleaning macOS Pods..."
+    rm -rf Pods
+    rm -f Podfile.lock
+    rm -f Pods/Manifest.lock
+    
+    # Deintegrate CocoaPods completely
+    if command -v pod &> /dev/null; then
+        pod deintegrate 2>/dev/null || true
+    fi
+    
+    # Update CocoaPods repo
+    if command -v pod &> /dev/null; then
+        pod repo update 2>/dev/null || true
+    fi
+    
     pod install --repo-update 2>/dev/null || true
     # Fix macOS deployment target and module verification in Pods.xcodeproj if it exists
     if [ -f "Pods/Pods.xcodeproj/project.pbxproj" ]; then
@@ -214,11 +230,26 @@ fi
 # Remove existing Pods and Manifest.lock to ensure clean install
 echo "🧹 Cleaning existing Pods installation..."
 rm -rf Pods
+rm -f Podfile.lock
 rm -f Pods/Manifest.lock
+
+# Deintegrate CocoaPods completely (more thorough cleanup)
+echo "🧹 Deintegrating CocoaPods..."
+if command -v pod &> /dev/null; then
+    pod deintegrate 2>/dev/null || true
+fi
 
 # Clean CocoaPods cache
 echo "🧹 Cleaning CocoaPods cache..."
-pod cache clean --all 2>/dev/null || true
+if command -v pod &> /dev/null; then
+    pod cache clean --all 2>/dev/null || true
+fi
+
+# Update CocoaPods repo
+echo "🔄 Updating CocoaPods repo..."
+if command -v pod &> /dev/null; then
+    pod repo update 2>/dev/null || true
+fi
 
 # Install pods (this will regenerate Podfile.lock and Manifest.lock)
 echo "📦 Installing CocoaPods dependencies..."
