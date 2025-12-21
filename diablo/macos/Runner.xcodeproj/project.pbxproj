@@ -582,6 +582,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/DebugProfile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_INCOMING_NETWORK_CONNECTIONS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -594,6 +595,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
@@ -731,6 +733,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/DebugProfile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_INCOMING_NETWORK_CONNECTIONS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -743,6 +746,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
@@ -766,6 +770,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = U88T3SPD73;
 				DWARF_DSYM_FILE_SHOULD_ACCOMPANY_PRODUCT = YES;
@@ -783,6 +788,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.6;
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
