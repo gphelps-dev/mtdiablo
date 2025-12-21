@@ -123,6 +123,22 @@ if [ -f "Podfile" ]; then
         bash create_flutter_headers_symlink.sh 2>/dev/null || true
     fi
     
+    # Clean macOS Pods before install
+    echo "🧹 Cleaning macOS Pods..."
+    rm -rf Pods
+    rm -f Podfile.lock
+    rm -f Pods/Manifest.lock
+    
+    # Deintegrate CocoaPods completely
+    if command -v pod &> /dev/null; then
+        pod deintegrate 2>/dev/null || true
+    fi
+    
+    # Update CocoaPods repo
+    if command -v pod &> /dev/null; then
+        pod repo update 2>/dev/null || true
+    fi
+    
     pod install --repo-update 2>/dev/null || true
     # Fix macOS deployment target and module verification in Pods.xcodeproj if it exists
     if [ -f "Pods/Pods.xcodeproj/project.pbxproj" ]; then
