@@ -206,12 +206,23 @@ post_install do |installer|
       if defined?(flutter_root) && flutter_root
         flutter_engine = File.join(flutter_root, 'bin', 'cache', 'artifacts', 'engine')
         if Dir.exist?(flutter_engine)
-          Dir.glob(File.join(flutter_engine, '**/FlutterMacOS.xcframework')).each do |xcframework_path|
-            config.build_settings['FRAMEWORK_SEARCH_PATHS'] ||= ['$(inherited)']
-            config.build_settings['FRAMEWORK_SEARCH_PATHS'] << File.dirname(xcframework_path) unless config.build_settings['FRAMEWORK_SEARCH_PATHS'].include?(File.dirname(xcframework_path))
+          # Find FlutterMacOS.xcframework directories (only top-level, not nested)
+          Dir.glob(File.join(flutter_engine, '**/darwin-x64*/FlutterMacOS.xcframework')).each do |xcframework_path|
+            # Only add if it's a direct xcframework path (not nested)
+            next if xcframework_path.include?('/FlutterMacOS/')
             
-            # Add headers from xcframework
+            # Add the directory containing the xcframework to FRAMEWORK_SEARCH_PATHS
+            xcframework_dir = File.dirname(xcframework_path)
+            config.build_settings['FRAMEWORK_SEARCH_PATHS'] ||= ['$(inherited)']
+            config.build_settings['FRAMEWORK_SEARCH_PATHS'] << xcframework_dir unless config.build_settings['FRAMEWORK_SEARCH_PATHS'].include?(xcframework_dir)
+            
+            # Also add the xcframework itself (for module resolution)
+            config.build_settings['FRAMEWORK_SEARCH_PATHS'] << xcframework_path unless config.build_settings['FRAMEWORK_SEARCH_PATHS'].include?(xcframework_path)
+            
+            # Add headers from xcframework (only top-level Headers directories)
             Dir.glob(File.join(xcframework_path, '**/Headers')).each do |headers_path|
+              # Skip nested Headers directories
+              next if headers_path.include?('/FlutterMacOS/Headers/')
               config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)']
               config.build_settings['HEADER_SEARCH_PATHS'] << headers_path unless config.build_settings['HEADER_SEARCH_PATHS'].include?(headers_path)
             end
