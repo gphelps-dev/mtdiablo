@@ -229,10 +229,78 @@ def add_flutter_paths(match):
 pattern = r'HEADER_SEARCH_PATHS = \([^)]*\);'
 content = re.sub(pattern, add_flutter_paths, content, flags=re.DOTALL)
 
+# CRITICAL: Also clean FRAMEWORK_SEARCH_PATHS to remove nested paths
+def clean_framework_paths(match):
+    framework_block = match.group(0)
+    paths = match.group(1)
+    
+    # Remove lines with nested FlutterMacOS paths
+    lines = paths.split('\n')
+    cleaned_lines = []
+    seen_paths = set()
+    
+    for line in lines:
+        stripped = line.strip().strip('"').strip(',').strip()
+        if not stripped or stripped == '$(inherited)':
+            cleaned_lines.append(line)
+            continue
+        
+        # Skip nested FlutterMacOS paths
+        if '/FlutterMacOS/FlutterMacOS/' in stripped:
+            continue
+        
+        # Normalize for comparison
+        normalized = stripped.rstrip('/')
+        if normalized not in seen_paths:
+            cleaned_lines.append(line)
+            seen_paths.add(normalized)
+    
+    cleaned_paths = '\n'.join(cleaned_lines)
+    return f'FRAMEWORK_SEARCH_PATHS = (\n{cleaned_paths}\n\t\t\t);'
+
+# Clean FRAMEWORK_SEARCH_PATHS blocks
+framework_pattern = r'FRAMEWORK_SEARCH_PATHS = \((.*?)\);'
+content = re.sub(framework_pattern, clean_framework_paths, content, flags=re.DOTALL)
+
+# Add correct FlutterMacOS.xcframework paths to FRAMEWORK_SEARCH_PATHS
+if os.path.exists("Flutter/ephemeral/Flutter-Generated.xcconfig"):
+    with open("Flutter/ephemeral/Flutter-Generated.xcconfig", 'r') as f:
+        for line in f:
+            if line.startswith('FLUTTER_ROOT='):
+                flutter_root = line.split('=', 1)[1].strip().strip('"').strip("'")
+                engine_dir = os.path.join(flutter_root, 'bin', 'cache', 'artifacts', 'engine')
+                if os.path.exists(engine_dir):
+                    # Find FlutterMacOS.xcframework directories (only top-level)
+                    xcframework_paths = []
+                    for root, dirs, files in os.walk(engine_dir):
+                        if 'darwin-x64' in root and root.endswith('FlutterMacOS.xcframework'):
+                            if '/FlutterMacOS/' not in root:  # Skip nested
+                                xcframework_paths.append(root)
+                    
+                    if xcframework_paths:
+                        def add_xcframework_to_frameworks(match):
+                            framework_block = match.group(0)
+                            paths = match.group(1)
+                            
+                            # Check if already has correct paths
+                            has_correct = any(p in framework_block for p in xcframework_paths[:2])
+                            if has_correct:
+                                return framework_block
+                            
+                            # Add xcframework paths
+                            indent = "\t\t\t\t"
+                            paths_str = '\n'.join([f'{indent}"{p}",' for p in xcframework_paths[:3]])
+                            all_paths = paths.rstrip() + '\n' + paths_str
+                            return f'FRAMEWORK_SEARCH_PATHS = (\n{all_paths}\n\t\t\t);'
+                        
+                        content = re.sub(framework_pattern, add_xcframework_to_frameworks, content, flags=re.DOTALL)
+                break
+
 with open(project_file, 'w') as f:
     f.write(content)
 
 print(f"✅ Added {len(paths_to_add)} Flutter header path(s) to all HEADER_SEARCH_PATHS blocks")
+print(f"✅ Cleaned FRAMEWORK_SEARCH_PATHS and added FlutterMacOS.xcframework paths")
 PYTHON_SCRIPT
 
 if [ -d "$FLUTTER_EPHEMERAL" ]; then
