@@ -415,34 +415,41 @@ class _InteractiveMapScreenState extends State<InteractiveMapScreen> {
     );
   }
 
-  void _openDirections(dynamic item) async {
-    String url;
+  void _openDirections(dynamic item) {
+    // Show coordinates instead of opening Apple Maps
+    String coordinates;
+    String locationName;
     
     if (item is Trail) {
-      // Use the first coordinate of the trail as the destination
       if (item.coordinates.isNotEmpty) {
         final firstCoord = item.coordinates.first;
-        // Apple Maps URL format: maps://maps.apple.com/?daddr=lat,lng
-        url = 'maps://maps.apple.com/?daddr=${firstCoord.latitude},${firstCoord.longitude}';
+        coordinates = '${firstCoord.latitude}, ${firstCoord.longitude}';
+        locationName = item.name;
       } else {
-        // Fallback to trailhead name if no coordinates
-        url = 'maps://maps.apple.com/?q=${Uri.encodeComponent(item.trailhead)}';
+        coordinates = 'N/A';
+        locationName = item.trailhead;
       }
     } else if (item is Amenity) {
-      url = 'maps://maps.apple.com/?daddr=${item.location.latitude},${item.location.longitude}';
+      coordinates = '${item.location.latitude}, ${item.location.longitude}';
+      locationName = item.name;
     } else {
       return;
     }
     
-    final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not open directions to ${item.name}')),
-        );
-      }
+    if (mounted) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Location: $locationName'),
+          content: SelectableText('Coordinates: $coordinates'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
+            ),
+          ],
+        ),
+      );
     }
   }
 } 

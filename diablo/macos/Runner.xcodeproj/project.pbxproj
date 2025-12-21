@@ -562,6 +562,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
@@ -576,6 +577,8 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/DebugProfile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = YES;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -583,8 +586,19 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				RUNTIME_EXCEPTION_ALLOW_JIT = YES;
 				SWIFT_VERSION = 5.0;
-			};
+			
+			OTHER_LDFLAGS = (
+				"$(inherited)",
+				"-framework FlutterMacOS",
+			);
+
+			FRAMEWORK_SEARCH_PATHS = (
+				"$(inherited)",
+				"$(FLUTTER_ROOT)/bin/cache/artifacts/engine/darwin-x64",
+			);
+};
 			name = Profile;
 		};
 		338D0CEB231458BD00FA5F75 /* Profile */ = {
@@ -647,6 +661,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -696,6 +711,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
@@ -710,6 +726,8 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/DebugProfile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = YES;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -717,9 +735,20 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				RUNTIME_EXCEPTION_ALLOW_JIT = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-			};
+			
+			OTHER_LDFLAGS = (
+				"$(inherited)",
+				"-framework FlutterMacOS",
+			);
+
+			FRAMEWORK_SEARCH_PATHS = (
+				"$(inherited)",
+				"$(FLUTTER_ROOT)/bin/cache/artifacts/engine/darwin-x64",
+			);
+};
 			name = Debug;
 		};
 		33CC10FD2044A3C60003C045 /* Release */ = {
@@ -731,6 +760,8 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Release.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = YES;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -738,8 +769,19 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				RUNTIME_EXCEPTION_ALLOW_JIT = YES;
 				SWIFT_VERSION = 5.0;
-			};
+			
+			OTHER_LDFLAGS = (
+				"$(inherited)",
+				"-framework FlutterMacOS",
+			);
+
+			FRAMEWORK_SEARCH_PATHS = (
+				"$(inherited)",
+				"$(FLUTTER_ROOT)/bin/cache/artifacts/engine/darwin-x64",
+			);
+};
 			name = Release;
 		};
 		33CC111C2044C6BA0003C045 /* Debug */ = {
