@@ -8,14 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
-		32247742F83272066E95B68D /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD0E530CE7A5A5BE1C79F008 /* Pods_RunnerTests.framework */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
+		4864A777517FA90B69841A6D /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A394EB9CA13641DF21E05E4 /* Pods_RunnerTests.framework */; };
+		5C649317ECD268C671042F32 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 249DAAE8619278D2C99C1ABA /* Pods_Runner.framework */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
-		A1127E2C6DFFADF5A0D0464B /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C6D74B26DCEE82BC0EE06BE /* Pods_Runner.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,20 +42,21 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0B91E9C335BFFCE5E8C802D6 /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
+		0A394EB9CA13641DF21E05E4 /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
+		1AA2562B1E08712AB1135679 /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
+		1C2928591A62953EAEA2A447 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
+		23009CAD787CDC3DBD784FFF /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
+		249DAAE8619278D2C99C1ABA /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		30268AFD848C31ABC28202CF /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
-		3C6D74B26DCEE82BC0EE06BE /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5A32BBC9116F4FECD198A14D /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
-		5A66810DCD16CCE7E6DF1735 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
+		4055008549E6745415864E6D /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
-		85675A964ECA3A24767FCBF4 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
-		8F25BD6DF66DAA4845E1A235 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -63,8 +64,7 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		AC8EE20E76B1579845DB93C5 /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
-		CD0E530CE7A5A5BE1C79F008 /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B4549D0373E44EA4EB2C7862 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		D3B85C5D2CF3CAA200DF7D27 /* RunnerDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RunnerDebug.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -73,7 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				32247742F83272066E95B68D /* Pods_RunnerTests.framework in Frameworks */,
+				4864A777517FA90B69841A6D /* Pods_RunnerTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,7 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1127E2C6DFFADF5A0D0464B /* Pods_Runner.framework in Frameworks */,
+				5C649317ECD268C671042F32 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,12 +91,12 @@
 		03A9AED6A9EC80700885887A /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				85675A964ECA3A24767FCBF4 /* Pods-Runner.debug.xcconfig */,
-				5A66810DCD16CCE7E6DF1735 /* Pods-Runner.release.xcconfig */,
-				8F25BD6DF66DAA4845E1A235 /* Pods-Runner.profile.xcconfig */,
-				0B91E9C335BFFCE5E8C802D6 /* Pods-RunnerTests.debug.xcconfig */,
-				AC8EE20E76B1579845DB93C5 /* Pods-RunnerTests.release.xcconfig */,
-				5A32BBC9116F4FECD198A14D /* Pods-RunnerTests.profile.xcconfig */,
+				1C2928591A62953EAEA2A447 /* Pods-Runner.debug.xcconfig */,
+				B4549D0373E44EA4EB2C7862 /* Pods-Runner.release.xcconfig */,
+				4055008549E6745415864E6D /* Pods-Runner.profile.xcconfig */,
+				1AA2562B1E08712AB1135679 /* Pods-RunnerTests.debug.xcconfig */,
+				23009CAD787CDC3DBD784FFF /* Pods-RunnerTests.release.xcconfig */,
+				30268AFD848C31ABC28202CF /* Pods-RunnerTests.profile.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -128,7 +128,7 @@
 				97C146EF1CF9000F007C117D /* Products */,
 				331C8082294A63A400263BE5 /* RunnerTests */,
 				03A9AED6A9EC80700885887A /* Pods */,
-				C98D1F2F07D8626BD5972A13 /* Frameworks */,
+				FFE9C240A60580D456C9FEDB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -157,11 +157,11 @@
 			path = Runner;
 			sourceTree = "<group>";
 		};
-		C98D1F2F07D8626BD5972A13 /* Frameworks */ = {
+		FFE9C240A60580D456C9FEDB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3C6D74B26DCEE82BC0EE06BE /* Pods_Runner.framework */,
-				CD0E530CE7A5A5BE1C79F008 /* Pods_RunnerTests.framework */,
+				249DAAE8619278D2C99C1ABA /* Pods_Runner.framework */,
+				0A394EB9CA13641DF21E05E4 /* Pods_RunnerTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -173,7 +173,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 331C8087294A63A400263BE5 /* Build configuration list for PBXNativeTarget "RunnerTests" */;
 			buildPhases = (
-				9A4E6D1907FC19CAC50F0E9A /* [CP] Check Pods Manifest.lock */,
+				404A9F977E57E6A3AFC26E1E /* [CP] Check Pods Manifest.lock */,
 				331C807D294A63A400263BE5 /* Sources */,
 				331C807F294A63A400263BE5 /* Resources */,
 				128BD8B0DB9D5577FF773DDD /* Frameworks */,
@@ -192,17 +192,17 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget "Runner" */;
 			buildPhases = (
+				3E5DD3E0E7344EBD4F16335F /* [CP] Check Pods Manifest.lock */,
 				960F59FF16D045ED951BD9EB /* Sync Podfile.lock and Manifest.lock */,
 				215EBB0A053644D193FB49DD /* Ensure Release xcfilelist files exist */,
-				12F37A36E9CA182AFFD1DD55 /* [CP] Check Pods Manifest.lock */,
 				9740EEB61CF901F6004384FC /* Run Script */,
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
-				13DD5E90B46A2DBA090410AC /* [CP] Embed Pods Frameworks */,
-				94561AB56715789D8FFDD073 /* [CP] Copy Pods Resources */,
+				6CABC8240D819060497A94DE /* [CP] Embed Pods Frameworks */,
+				0D480E85EACEE99C1D351F63 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -274,6 +274,120 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0D480E85EACEE99C1D351F63 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		215EBB0A053644D193FB49DD /* Ensure Release xcfilelist files exist */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Ensure Release xcfilelist files exist";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Ensure Release xcfilelist files exist before CocoaPods tries to read them\nset -e\nRELEASE_DIR=\"${PODS_ROOT}/Target Support Files/Pods-Runner\"\nmkdir -p \"$RELEASE_DIR\"\n\n# List of Release xcfilelist files we need\nRELEASE_FILES=(\n    \"Pods-Runner-resources-Release-input-files.xcfilelist\"\n    \"Pods-Runner-resources-Release-output-files.xcfilelist\"\n    \"Pods-Runner-frameworks-Release-input-files.xcfilelist\"\n    \"Pods-Runner-frameworks-Release-output-files.xcfilelist\"\n)\n\n# Create Release files from Debug/Profile templates if they don't exist\nfor release_file in \"${RELEASE_FILES[@]}\"; do\n    release_path=\"$RELEASE_DIR/$release_file\"\n    \n    # Always ensure file exists and is valid\n    if [ ! -f \"$release_path\" ] || [ ! -s \"$release_path\" ]; then\n        # Try Debug first\n        debug_file=$(echo \"$release_file\" | sed 's/-Release-/-Debug-/')\n        debug_path=\"$RELEASE_DIR/$debug_file\"\n        if [ -f \"$debug_path\" ] && [ -s \"$debug_path\" ]; then\n            cp \"$debug_path\" \"$release_path\"\n        else\n            # Try Profile\n            profile_file=$(echo \"$release_file\" | sed 's/-Release-/-Profile-/')\n            profile_path=\"$RELEASE_DIR/$profile_file\"\n            if [ -f \"$profile_path\" ] && [ -s \"$profile_path\" ]; then\n                cp \"$profile_path\" \"$release_path\"\n            else\n                # Create empty file (xcfilelist files can be empty)\n                echo \"\" > \"$release_path\"\n            fi\n        fi\n        chmod 644 \"$release_path\"\n    fi\n    \n    # Final verification - file must exist\n    if [ ! -f \"$release_path\" ]; then\n        echo \"Error: Failed to create $release_path\"\n        exit 1\n    fi\n    \n    # Ensure file is readable\n    chmod 644 \"$release_path\"\ndone\n";
+			showEnvVarsInLog = 0;
+		};
+		3B06AD1E1E4923F5004D2608 /* Thin Binary */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}",
+			);
+			name = "Thin Binary";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin";
+		};
+		3E5DD3E0E7344EBD4F16335F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Runner-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		404A9F977E57E6A3AFC26E1E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RunnerTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6CABC8240D819060497A94DE /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		960F59FF16D045ED951BD9EB /* Sync Podfile.lock and Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -296,104 +410,6 @@
 			shellScript = "# Ensure Manifest.lock exists and matches Podfile.lock\n# This prevents 'The sandbox is not in sync with the Podfile.lock' error\n\nPODFILE_LOCK=\"${PODS_PODFILE_DIR_PATH}/Podfile.lock\"\nMANIFEST_LOCK=\"${PODS_ROOT}/Manifest.lock\"\n\n# Debug output\necho \"🔍 Syncing Podfile.lock and Manifest.lock...\"\necho \"   PODS_PODFILE_DIR_PATH: ${PODS_PODFILE_DIR_PATH}\"\necho \"   PODS_ROOT: ${PODS_ROOT}\"\n\nif [ -f \"$PODFILE_LOCK\" ]; then\n    # Ensure Pods directory exists\n    mkdir -p \"${PODS_ROOT}\"\n    \n    # Copy Podfile.lock to Manifest.lock\n    cp \"$PODFILE_LOCK\" \"$MANIFEST_LOCK\"\n    \n    # Verify the copy succeeded\n    if [ -f \"$MANIFEST_LOCK\" ]; then\n        echo \"✅ Successfully synced Podfile.lock to Manifest.lock\"\n        # Verify they match\n        if diff -q \"$PODFILE_LOCK\" \"$MANIFEST_LOCK\" > /dev/null 2>&1; then\n            echo \"✅ Podfile.lock and Manifest.lock are in sync\"\n        else\n            echo \"⚠️  Warning: Files copied but don't match, retrying...\"\n            cp \"$PODFILE_LOCK\" \"$MANIFEST_LOCK\"\n        fi\n    else\n        echo \"❌ Error: Failed to create Manifest.lock\"\n        exit 1\n    fi\nelse\n    echo \"⚠️  Warning: Podfile.lock not found at $PODFILE_LOCK\"\n    echo \"   This may be normal if pods haven't been installed yet\"\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		215EBB0A053644D193FB49DD /* Ensure Release xcfilelist files exist */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Ensure Release xcfilelist files exist";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-Release-input-files.xcfilelist",
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-Release-output-files.xcfilelist",
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-Release-input-files.xcfilelist",
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-Release-output-files.xcfilelist",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Ensure Release xcfilelist files exist before CocoaPods tries to read them\nset -e\nRELEASE_DIR=\"${PODS_ROOT}/Target Support Files/Pods-Runner\"\nmkdir -p \"$RELEASE_DIR\"\n\n# List of Release xcfilelist files we need\nRELEASE_FILES=(\n    \"Pods-Runner-resources-Release-input-files.xcfilelist\"\n    \"Pods-Runner-resources-Release-output-files.xcfilelist\"\n    \"Pods-Runner-frameworks-Release-input-files.xcfilelist\"\n    \"Pods-Runner-frameworks-Release-output-files.xcfilelist\"\n)\n\n# Create Release files from Debug/Profile templates if they don't exist\nfor release_file in \"${RELEASE_FILES[@]}\"; do\n    release_path=\"$RELEASE_DIR/$release_file\"\n    \n    # Always ensure file exists and is valid\n    if [ ! -f \"$release_path\" ] || [ ! -s \"$release_path\" ]; then\n        # Try Debug first\n        debug_file=$(echo \"$release_file\" | sed 's/-Release-/-Debug-/')\n        debug_path=\"$RELEASE_DIR/$debug_file\"\n        if [ -f \"$debug_path\" ] && [ -s \"$debug_path\" ]; then\n            cp \"$debug_path\" \"$release_path\"\n        else\n            # Try Profile\n            profile_file=$(echo \"$release_file\" | sed 's/-Release-/-Profile-/')\n            profile_path=\"$RELEASE_DIR/$profile_file\"\n            if [ -f \"$profile_path\" ] && [ -s \"$profile_path\" ]; then\n                cp \"$profile_path\" \"$release_path\"\n            else\n                # Create empty file (xcfilelist files can be empty)\n                echo \"\" > \"$release_path\"\n            fi\n        fi\n        chmod 644 \"$release_path\"\n    fi\n    \n    # Final verification - file must exist\n    if [ ! -f \"$release_path\" ]; then\n        echo \"Error: Failed to create $release_path\"\n        exit 1\n    fi\n    \n    # Ensure file is readable\n    chmod 644 \"$release_path\"\ndone\n";
-			showEnvVarsInLog = 0;
-		};
-		12F37A36E9CA182AFFD1DD55 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Runner-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Check if Podfile.lock and Manifest.lock are in sync\n# If Manifest.lock doesn't exist or doesn't match, create/sync it from Podfile.lock\n\nPODFILE_LOCK=\"${PODS_PODFILE_DIR_PATH}/Podfile.lock\"\nMANIFEST_LOCK=\"${PODS_ROOT}/Manifest.lock\"\n\n# If Manifest.lock doesn't exist, create it from Podfile.lock\nif [ ! -f \"$MANIFEST_LOCK\" ] && [ -f \"$PODFILE_LOCK\" ]; then\n    echo \"⚠️  Manifest.lock not found, creating from Podfile.lock...\"\n    mkdir -p \"${PODS_ROOT}\"\n    cp \"$PODFILE_LOCK\" \"$MANIFEST_LOCK\"\n    echo \"✅ Created Manifest.lock from Podfile.lock\"\nfi\n\n# Check if files are in sync\nif [ -f \"$PODFILE_LOCK\" ] && [ -f \"$MANIFEST_LOCK\" ]; then\n    diff \"$PODFILE_LOCK\" \"$MANIFEST_LOCK\" > /dev/null\n    if [ $? != 0 ] ; then\n        # Files don't match, sync them\n        echo \"⚠️  Podfile.lock and Manifest.lock are out of sync, syncing...\"\n        cp \"$PODFILE_LOCK\" \"$MANIFEST_LOCK\"\n        echo \"✅ Synced Manifest.lock to match Podfile.lock\"\n    fi\n    # This output is used by Xcode 'outputs' to avoid re-running this script phase.\n    echo \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\nelse\n    if [ ! -f \"$PODFILE_LOCK\" ]; then\n        echo \"error: Podfile.lock not found. Run 'pod install' first.\" >&2\n        exit 1\n    else\n        echo \"error: Manifest.lock not found and could not be created.\" >&2\n        exit 1\n    fi\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		13DD5E90B46A2DBA090410AC /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		3B06AD1E1E4923F5004D2608 /* Thin Binary */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}",
-			);
-			name = "Thin Binary";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin";
-		};
-		94561AB56715789D8FFDD073 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		9740EEB61CF901F6004384FC /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -408,28 +424,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build";
-		};
-		9A4E6D1907FC19CAC50F0E9A /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-RunnerTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Check if Podfile.lock and Manifest.lock are in sync\n# If Manifest.lock doesn't exist or doesn't match, create/sync it from Podfile.lock\n\nPODFILE_LOCK=\"${PODS_PODFILE_DIR_PATH}/Podfile.lock\"\nMANIFEST_LOCK=\"${PODS_ROOT}/Manifest.lock\"\n\n# If Manifest.lock doesn't exist, create it from Podfile.lock\nif [ ! -f \"$MANIFEST_LOCK\" ] && [ -f \"$PODFILE_LOCK\" ]; then\n    echo \"⚠️  Manifest.lock not found, creating from Podfile.lock...\"\n    mkdir -p \"${PODS_ROOT}\"\n    cp \"$PODFILE_LOCK\" \"$MANIFEST_LOCK\"\n    echo \"✅ Created Manifest.lock from Podfile.lock\"\nfi\n\n# Check if files are in sync\nif [ -f \"$PODFILE_LOCK\" ] && [ -f \"$MANIFEST_LOCK\" ]; then\n    diff \"$PODFILE_LOCK\" \"$MANIFEST_LOCK\" > /dev/null\n    if [ $? != 0 ] ; then\n        # Files don't match, sync them\n        echo \"⚠️  Podfile.lock and Manifest.lock are out of sync, syncing...\"\n        cp \"$PODFILE_LOCK\" \"$MANIFEST_LOCK\"\n        echo \"✅ Synced Manifest.lock to match Podfile.lock\"\n    fi\n    # This output is used by Xcode 'outputs' to avoid re-running this script phase.\n    echo \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\nelse\n    if [ ! -f \"$PODFILE_LOCK\" ]; then\n        echo \"error: Podfile.lock not found. Run 'pod install' first.\" >&2\n        exit 1\n    else\n        echo \"error: Manifest.lock not found and could not be created.\" >&2\n        exit 1\n    fi\nfi\n";
-			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -561,7 +555,7 @@
 		};
 		331C8088294A63A400263BE5 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0B91E9C335BFFCE5E8C802D6 /* Pods-RunnerTests.debug.xcconfig */;
+			baseConfigurationReference = 1AA2562B1E08712AB1135679 /* Pods-RunnerTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -579,7 +573,7 @@
 		};
 		331C8089294A63A400263BE5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AC8EE20E76B1579845DB93C5 /* Pods-RunnerTests.release.xcconfig */;
+			baseConfigurationReference = 23009CAD787CDC3DBD784FFF /* Pods-RunnerTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -595,7 +589,7 @@
 		};
 		331C808A294A63A400263BE5 /* Profile */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5A32BBC9116F4FECD198A14D /* Pods-RunnerTests.profile.xcconfig */;
+			baseConfigurationReference = 30268AFD848C31ABC28202CF /* Pods-RunnerTests.profile.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
