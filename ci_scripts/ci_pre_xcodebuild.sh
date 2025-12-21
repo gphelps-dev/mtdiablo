@@ -178,7 +178,7 @@ cd ..
 
 # Install CocoaPods dependencies for iOS
 echo "🍫 Running pod install for iOS..."
-cd ios
+cd "$CI_WORKSPACE/diablo/ios"
 
 # Ensure CocoaPods is available
 if ! command -v pod &> /dev/null; then
