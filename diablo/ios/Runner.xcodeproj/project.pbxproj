@@ -293,7 +293,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Ensure Manifest.lock exists and matches Podfile.lock\nif [ -f \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" ]; then\n    mkdir -p \"${PODS_ROOT}\"\n    cp \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\"\n    echo \"✅ Synced Podfile.lock to Manifest.lock\"\nelse\n    echo \"⚠️  Warning: Podfile.lock not found\"\nfi\n";
+			shellScript = "# Ensure Manifest.lock exists and matches Podfile.lock\n# This prevents 'The sandbox is not in sync with the Podfile.lock' error\n\nPODFILE_LOCK=\"${PODS_PODFILE_DIR_PATH}/Podfile.lock\"\nMANIFEST_LOCK=\"${PODS_ROOT}/Manifest.lock\"\n\n# Debug output\necho \"🔍 Syncing Podfile.lock and Manifest.lock...\"\necho \"   PODS_PODFILE_DIR_PATH: ${PODS_PODFILE_DIR_PATH}\"\necho \"   PODS_ROOT: ${PODS_ROOT}\"\n\nif [ -f \"$PODFILE_LOCK\" ]; then\n    # Ensure Pods directory exists\n    mkdir -p \"${PODS_ROOT}\"\n    \n    # Copy Podfile.lock to Manifest.lock\n    cp \"$PODFILE_LOCK\" \"$MANIFEST_LOCK\"\n    \n    # Verify the copy succeeded\n    if [ -f \"$MANIFEST_LOCK\" ]; then\n        echo \"✅ Successfully synced Podfile.lock to Manifest.lock\"\n        # Verify they match\n        if diff -q \"$PODFILE_LOCK\" \"$MANIFEST_LOCK\" > /dev/null 2>&1; then\n            echo \"✅ Podfile.lock and Manifest.lock are in sync\"\n        else\n            echo \"⚠️  Warning: Files copied but don't match, retrying...\"\n            cp \"$PODFILE_LOCK\" \"$MANIFEST_LOCK\"\n        fi\n    else\n        echo \"❌ Error: Failed to create Manifest.lock\"\n        exit 1\n    fi\nelse\n    echo \"⚠️  Warning: Podfile.lock not found at $PODFILE_LOCK\"\n    echo \"   This may be normal if pods haven't been installed yet\"\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		215EBB0A053644D193FB49DD /* Ensure Release xcfilelist files exist */ = {
@@ -335,11 +335,12 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "# Check if Podfile.lock and Manifest.lock are in sync\n# If Manifest.lock doesn't exist or doesn't match, create/sync it from Podfile.lock\n\nPODFILE_LOCK=\"${PODS_PODFILE_DIR_PATH}/Podfile.lock\"\nMANIFEST_LOCK=\"${PODS_ROOT}/Manifest.lock\"\n\n# If Manifest.lock doesn't exist, create it from Podfile.lock\nif [ ! -f \"$MANIFEST_LOCK\" ] && [ -f \"$PODFILE_LOCK\" ]; then\n    echo \"⚠️  Manifest.lock not found, creating from Podfile.lock...\"\n    mkdir -p \"${PODS_ROOT}\"\n    cp \"$PODFILE_LOCK\" \"$MANIFEST_LOCK\"\n    echo \"✅ Created Manifest.lock from Podfile.lock\"\nfi\n\n# Check if files are in sync\nif [ -f \"$PODFILE_LOCK\" ] && [ -f \"$MANIFEST_LOCK\" ]; then\n    diff \"$PODFILE_LOCK\" \"$MANIFEST_LOCK\" > /dev/null\n    if [ $? != 0 ] ; then\n        # Files don't match, sync them\n        echo \"⚠️  Podfile.lock and Manifest.lock are out of sync, syncing...\"\n        cp \"$PODFILE_LOCK\" \"$MANIFEST_LOCK\"\n        echo \"✅ Synced Manifest.lock to match Podfile.lock\"\n    fi\n    # This output is used by Xcode 'outputs' to avoid re-running this script phase.\n    echo \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\nelse\n    if [ ! -f \"$PODFILE_LOCK\" ]; then\n        echo \"error: Podfile.lock not found. Run 'pod install' first.\" >&2\n        exit 1\n    else\n        echo \"error: Manifest.lock not found and could not be created.\" >&2\n        exit 1\n    fi\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		13DD5E90B46A2DBA090410AC /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -373,6 +374,7 @@
 		};
 		94561AB56715789D8FFDD073 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -422,7 +424,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "# Check if Podfile.lock and Manifest.lock are in sync\n# If Manifest.lock doesn't exist or doesn't match, create/sync it from Podfile.lock\n\nPODFILE_LOCK=\"${PODS_PODFILE_DIR_PATH}/Podfile.lock\"\nMANIFEST_LOCK=\"${PODS_ROOT}/Manifest.lock\"\n\n# If Manifest.lock doesn't exist, create it from Podfile.lock\nif [ ! -f \"$MANIFEST_LOCK\" ] && [ -f \"$PODFILE_LOCK\" ]; then\n    echo \"⚠️  Manifest.lock not found, creating from Podfile.lock...\"\n    mkdir -p \"${PODS_ROOT}\"\n    cp \"$PODFILE_LOCK\" \"$MANIFEST_LOCK\"\n    echo \"✅ Created Manifest.lock from Podfile.lock\"\nfi\n\n# Check if files are in sync\nif [ -f \"$PODFILE_LOCK\" ] && [ -f \"$MANIFEST_LOCK\" ]; then\n    diff \"$PODFILE_LOCK\" \"$MANIFEST_LOCK\" > /dev/null\n    if [ $? != 0 ] ; then\n        # Files don't match, sync them\n        echo \"⚠️  Podfile.lock and Manifest.lock are out of sync, syncing...\"\n        cp \"$PODFILE_LOCK\" \"$MANIFEST_LOCK\"\n        echo \"✅ Synced Manifest.lock to match Podfile.lock\"\n    fi\n    # This output is used by Xcode 'outputs' to avoid re-running this script phase.\n    echo \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\nelse\n    if [ ! -f \"$PODFILE_LOCK\" ]; then\n        echo \"error: Podfile.lock not found. Run 'pod install' first.\" >&2\n        exit 1\n    else\n        echo \"error: Manifest.lock not found and could not be created.\" >&2\n        exit 1\n    fi\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

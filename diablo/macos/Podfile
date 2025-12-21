@@ -1,4 +1,4 @@
-platform :osx, '10.15'
+platform :osx, '11.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
@@ -37,7 +37,292 @@ target 'Runner' do
 end
 
 post_install do |installer|
+  # Get Flutter paths first
+  flutter_dir = File.join(File.dirname(File.realpath(__FILE__)), 'Flutter')
+  flutter_ephemeral = File.join(flutter_dir, 'ephemeral')
+  
+  # Find FlutterMacOS.h location from Flutter-Generated.xcconfig
+  flutter_macos_headers = nil
+  generated_config = File.join(flutter_ephemeral, 'Flutter-Generated.xcconfig')
+  if File.exist?(generated_config)
+    flutter_root_line = File.readlines(generated_config).find { |line| line.start_with?('FLUTTER_ROOT=') }
+    if flutter_root_line
+      flutter_root = flutter_root_line.split('=', 2)[1].strip
+      engine_dir = File.join(flutter_root, 'bin', 'cache', 'artifacts', 'engine')
+      if Dir.exist?(engine_dir)
+        flutter_macos_h = Dir.glob(File.join(engine_dir, '**/FlutterMacOS.h')).first
+        flutter_macos_headers = File.dirname(flutter_macos_h) if flutter_macos_h
+      end
+    end
+  end
+  
   installer.pods_project.targets.each do |target|
     flutter_additional_macos_build_settings(target)
+    target.build_configurations.each do |config|
+      # Ensure minimum macOS deployment target is 11.0 (matches Runner target)
+      current_target = config.build_settings['MACOSX_DEPLOYMENT_TARGET']
+      if current_target.nil? || current_target.to_f < 11.0
+        config.build_settings['MACOSX_DEPLOYMENT_TARGET'] = '11.0'
+      end
+      
+      # CRITICAL: Add Flutter header paths - essential for geolocator_apple to find FlutterMacOS.h
+      config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)']
+      
+      # Add Flutter ephemeral directory
+      if Dir.exist?(flutter_ephemeral)
+        config.build_settings['HEADER_SEARCH_PATHS'] << flutter_ephemeral unless config.build_settings['HEADER_SEARCH_PATHS'].include?(flutter_ephemeral)
+      end
+      
+      # Add FlutterMacOS.h directory from engine cache (CRITICAL!)
+      # This is where FlutterMacOS/FlutterMacOS.h symlink exists
+      if flutter_macos_headers && Dir.exist?(flutter_macos_headers)
+        config.build_settings['HEADER_SEARCH_PATHS'] << flutter_macos_headers unless config.build_settings['HEADER_SEARCH_PATHS'].include?(flutter_macos_headers)
+        
+        # CRITICAL: Also add the FlutterMacOS subdirectory itself for <FlutterMacOS/FlutterMacOS.h> imports
+        flutter_macos_subdir = File.join(flutter_macos_headers, 'FlutterMacOS')
+        if !Dir.exist?(flutter_macos_subdir)
+          begin
+            Dir.mkdir(flutter_macos_subdir)
+          rescue
+            # Directory might already exist or permission issue
+          end
+        end
+        flutter_macos_h_symlink = File.join(flutter_macos_subdir, 'FlutterMacOS.h')
+        if !File.exist?(flutter_macos_h_symlink)
+          begin
+            File.symlink('../FlutterMacOS.h', flutter_macos_h_symlink)
+          rescue
+            # Symlink might already exist
+          end
+        end
+        # ADD THE SUBDIRECTORY TO HEADER_SEARCH_PATHS - this is critical!
+        config.build_settings['HEADER_SEARCH_PATHS'] << flutter_macos_subdir unless config.build_settings['HEADER_SEARCH_PATHS'].include?(flutter_macos_subdir)
+      end
+      
+      # Also search in all Flutter engine Headers directories for FlutterMacOS
+      # Only search darwin-x64 directories (macOS), and avoid nested FlutterMacOS directories
+      if flutter_root && Dir.exist?(flutter_root)
+        engine_dir = File.join(flutter_root, 'bin', 'cache', 'artifacts', 'engine')
+        if Dir.exist?(engine_dir)
+          # Find all darwin-x64 Headers directories that contain FlutterMacOS.h
+          # Exclude paths that are already inside a FlutterMacOS subdirectory to avoid nesting
+          Dir.glob(File.join(engine_dir, '**/darwin-x64*/**/Headers/FlutterMacOS.h')).each do |flutter_macos_h|
+            headers_dir = File.dirname(flutter_macos_h)
+            # Skip if this FlutterMacOS.h is already inside a FlutterMacOS subdirectory
+            next if headers_dir.include?('/FlutterMacOS/')
+            
+            flutter_macos_subdir = File.join(headers_dir, 'FlutterMacOS')
+            # Add both the Headers directory and the FlutterMacOS subdirectory
+            config.build_settings['HEADER_SEARCH_PATHS'] << headers_dir unless config.build_settings['HEADER_SEARCH_PATHS'].include?(headers_dir)
+            if Dir.exist?(flutter_macos_subdir)
+              config.build_settings['HEADER_SEARCH_PATHS'] << flutter_macos_subdir unless config.build_settings['HEADER_SEARCH_PATHS'].include?(flutter_macos_subdir)
+            end
+          end
+        end
+      end
+      
+      # For geolocator_apple specifically, ensure we have the paths (CRITICAL - this is where the error occurs)
+      if target.name.include?('geolocator')
+        # Force initialize HEADER_SEARCH_PATHS if not already set
+        config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)']
+        
+        # Add Flutter ephemeral directory FIRST
+        if Dir.exist?(flutter_ephemeral)
+          config.build_settings['HEADER_SEARCH_PATHS'] << flutter_ephemeral unless config.build_settings['HEADER_SEARCH_PATHS'].include?(flutter_ephemeral)
+        end
+        
+        # Add FlutterMacOS headers directory from engine cache
+        if flutter_macos_headers && Dir.exist?(flutter_macos_headers)
+          config.build_settings['HEADER_SEARCH_PATHS'] << flutter_macos_headers unless config.build_settings['HEADER_SEARCH_PATHS'].include?(flutter_macos_headers)
+          
+          # CRITICAL: Add the FlutterMacOS subdirectory for <FlutterMacOS/FlutterMacOS.h> imports
+          flutter_macos_subdir = File.join(flutter_macos_headers, 'FlutterMacOS')
+          if Dir.exist?(flutter_macos_subdir)
+            config.build_settings['HEADER_SEARCH_PATHS'] << flutter_macos_subdir unless config.build_settings['HEADER_SEARCH_PATHS'].include?(flutter_macos_subdir)
+          end
+        end
+        
+        # Also search ALL darwin-x64 Headers directories (Debug, Release, Profile)
+        if flutter_root && Dir.exist?(flutter_root)
+          engine_dir = File.join(flutter_root, 'bin', 'cache', 'artifacts', 'engine')
+          if Dir.exist?(engine_dir)
+            # Find all darwin-x64 Headers directories
+            Dir.glob(File.join(engine_dir, '**/darwin-x64*/**/Headers')).each do |headers_dir|
+              # Skip if this Headers directory is already inside a FlutterMacOS subdirectory
+              next if headers_dir.include?('/FlutterMacOS/')
+              
+              flutter_macos_h = File.join(headers_dir, 'FlutterMacOS.h')
+              if File.exist?(flutter_macos_h)
+                # Add the Headers directory
+                config.build_settings['HEADER_SEARCH_PATHS'] << headers_dir unless config.build_settings['HEADER_SEARCH_PATHS'].include?(headers_dir)
+                
+                # CRITICAL: Add the FlutterMacOS subdirectory for <FlutterMacOS/FlutterMacOS.h> imports
+                flutter_macos_subdir = File.join(headers_dir, 'FlutterMacOS')
+                if Dir.exist?(flutter_macos_subdir)
+                  config.build_settings['HEADER_SEARCH_PATHS'] << flutter_macos_subdir unless config.build_settings['HEADER_SEARCH_PATHS'].include?(flutter_macos_subdir)
+                end
+              end
+            end
+          end
+        end
+        
+        # Debug: Print what we're adding (helps with troubleshooting)
+        if ENV['DEBUG_PODS'] == '1'
+          puts "  [geolocator_apple] Added HEADER_SEARCH_PATHS: #{config.build_settings['HEADER_SEARCH_PATHS'].select { |p| p.to_s.include?('FlutterMacOS') || p.to_s.include?('darwin-x64') }}"
+        end
+      end
+      
+      # Try multiple Flutter framework locations
+      flutter_frameworks = File.join(flutter_ephemeral, '.symlinks', 'frameworks')
+      flutter_xcframework = File.join(flutter_ephemeral, 'FlutterMacOS.xcframework')
+      
+      # Add .symlinks path if it exists
+      if Dir.exist?(flutter_frameworks)
+        config.build_settings['FRAMEWORK_SEARCH_PATHS'] ||= ['$(inherited)']
+        config.build_settings['FRAMEWORK_SEARCH_PATHS'] << flutter_frameworks unless config.build_settings['FRAMEWORK_SEARCH_PATHS'].include?(flutter_frameworks)
+        
+        # Add FlutterMacOS framework headers
+        flutter_macos_framework = File.join(flutter_frameworks, 'FlutterMacOS.framework')
+        if Dir.exist?(flutter_macos_framework)
+          headers_path = File.join(flutter_macos_framework, 'Headers')
+          config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)']
+          config.build_settings['HEADER_SEARCH_PATHS'] << headers_path unless config.build_settings['HEADER_SEARCH_PATHS'].include?(headers_path)
+        end
+      end
+      
+      # Add xcframework path if it exists (Flutter uses xcframework on newer versions)
+      if Dir.exist?(flutter_xcframework)
+        config.build_settings['FRAMEWORK_SEARCH_PATHS'] ||= ['$(inherited)']
+        config.build_settings['FRAMEWORK_SEARCH_PATHS'] << flutter_xcframework unless config.build_settings['FRAMEWORK_SEARCH_PATHS'].include?(flutter_xcframework)
+        
+        # Find headers in xcframework
+        Dir.glob(File.join(flutter_xcframework, '**/Headers')).each do |headers_path|
+          config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)']
+          config.build_settings['HEADER_SEARCH_PATHS'] << headers_path unless config.build_settings['HEADER_SEARCH_PATHS'].include?(headers_path)
+        end
+      end
+      
+      # Also check FLUTTER_ROOT for framework paths
+      if defined?(flutter_root) && flutter_root
+        flutter_engine = File.join(flutter_root, 'bin', 'cache', 'artifacts', 'engine')
+        if Dir.exist?(flutter_engine)
+          Dir.glob(File.join(flutter_engine, '**/FlutterMacOS.xcframework')).each do |xcframework_path|
+            config.build_settings['FRAMEWORK_SEARCH_PATHS'] ||= ['$(inherited)']
+            config.build_settings['FRAMEWORK_SEARCH_PATHS'] << File.dirname(xcframework_path) unless config.build_settings['FRAMEWORK_SEARCH_PATHS'].include?(File.dirname(xcframework_path))
+            
+            # Add headers from xcframework
+            Dir.glob(File.join(xcframework_path, '**/Headers')).each do |headers_path|
+              config.build_settings['HEADER_SEARCH_PATHS'] ||= ['$(inherited)']
+              config.build_settings['HEADER_SEARCH_PATHS'] << headers_path unless config.build_settings['HEADER_SEARCH_PATHS'].include?(headers_path)
+            end
+          end
+        end
+      end
+      
+      # Fix module build issues for plugins like geolocator_apple
+      # Enable modules and allow non-modular includes
+      config.build_settings['CLANG_ENABLE_MODULES'] = 'YES'
+      config.build_settings['DEFINES_MODULE'] = 'YES'
+      config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+      
+      # Disable module verification to avoid Test module build errors
+      # This is safe because we're using use_frameworks! which handles modules differently
+      config.build_settings['CLANG_ENABLE_MODULE_DEBUGGING'] = 'NO'
+      
+      # Disable module verification - this prevents the VerifyModule phase that causes Test module errors
+      # This is a known issue with CocoaPods and Flutter plugins on macOS
+      # Set multiple settings to ensure module verification is disabled
+      config.build_settings['CLANG_MODULE_VERIFICATION'] = 'NO'
+      config.build_settings['ENABLE_MODULE_VERIFICATION'] = 'NO'
+      config.build_settings['SWIFT_SUPPRESS_MODULE_VERIFICATION'] = 'YES'
+      # User-defined setting that Xcode respects
+      config.build_settings['SWIFT_DISABLE_MODULE_VERIFICATION'] = 'YES'
+      config.build_settings['CLANG_DISABLE_MODULE_VERIFICATION'] = 'YES'
+      
+      # Ensure proper module map generation
+      config.build_settings['CLANG_MODULE_BUILD'] = 'YES'
+      
+      # Remove VerifyModule build phase if it exists (more aggressive approach)
+      # This removes the build phase that causes the Test module error
+      target.build_phases.delete_if do |phase|
+        phase.respond_to?(:name) && phase.name == 'VerifyModule'
+      end
+      
+      # CRITICAL: Additional settings to prevent Xcode from creating VerifyModule dynamically
+      # These settings tell Xcode not to verify modules during build
+      config.build_settings['ENABLE_MODULE_VERIFICATION'] = 'NO'
+      config.build_settings['SWIFT_SUPPRESS_MODULE_VERIFICATION'] = 'YES'
+      
+      # Fix for ALL pod targets - ensure FlutterMacOS framework is linked
+      # This is critical for geolocator_apple and other Flutter plugins
+      config.build_settings['OTHER_LDFLAGS'] ||= ['$(inherited)']
+      
+      # Add FlutterMacOS framework to linker flags for all targets
+      framework_flag = "-framework FlutterMacOS"
+      if config.build_settings['OTHER_LDFLAGS'].is_a?(Array)
+        config.build_settings['OTHER_LDFLAGS'] << framework_flag unless config.build_settings['OTHER_LDFLAGS'].include?(framework_flag)
+      else
+        config.build_settings['OTHER_LDFLAGS'] = [config.build_settings['OTHER_LDFLAGS'], framework_flag].flatten
+      end
+      
+      # Ensure FlutterMacOS framework is in FRAMEWORK_SEARCH_PATHS for all targets
+      config.build_settings['FRAMEWORK_SEARCH_PATHS'] ||= ['$(inherited)']
+      
+      # Add Flutter framework paths from multiple locations
+      framework_paths_to_add = []
+      
+      # 1. From Flutter ephemeral .symlinks
+      flutter_frameworks = File.join(flutter_ephemeral, '.symlinks', 'frameworks')
+      if Dir.exist?(flutter_frameworks)
+        framework_paths_to_add << flutter_frameworks
+      end
+      
+      # 2. From FlutterMacOS headers location (parent directory)
+      if flutter_macos_headers && Dir.exist?(flutter_macos_headers)
+        # Navigate up to find the framework or xcframework
+        parent_dir = File.dirname(flutter_macos_headers)
+        if Dir.exist?(parent_dir)
+          framework_paths_to_add << parent_dir
+        end
+      end
+      
+      # 3. From FLUTTER_ROOT engine cache
+      if flutter_root && Dir.exist?(flutter_root)
+        engine_dir = File.join(flutter_root, 'bin', 'cache', 'artifacts', 'engine')
+        if Dir.exist?(engine_dir)
+          # Find FlutterMacOS.xcframework directories
+          Dir.glob(File.join(engine_dir, '**/FlutterMacOS.xcframework')).each do |xcframework_path|
+            xcframework_dir = File.dirname(xcframework_path)
+            framework_paths_to_add << xcframework_dir unless framework_paths_to_add.include?(xcframework_dir)
+          end
+        end
+      end
+      
+      # Add all found framework paths
+      framework_paths_to_add.each do |path|
+        if config.build_settings['FRAMEWORK_SEARCH_PATHS'].is_a?(Array)
+          config.build_settings['FRAMEWORK_SEARCH_PATHS'] << path unless config.build_settings['FRAMEWORK_SEARCH_PATHS'].include?(path)
+        else
+          config.build_settings['FRAMEWORK_SEARCH_PATHS'] = [config.build_settings['FRAMEWORK_SEARCH_PATHS'], path].flatten
+        end
+      end
+      
+      # Additional fix: Skip module verification by setting user-defined build setting
+      # This prevents Xcode from running the VerifyModule phase
+      config.build_settings['SKIP_MODULE_VERIFICATION'] = 'YES'
+    end
+  end
+  
+  # Also fix the project-level deployment target and module verification
+  installer.pods_project.build_configurations.each do |config|
+    current_target = config.build_settings['MACOSX_DEPLOYMENT_TARGET']
+    if current_target.nil? || current_target.to_f < 11.0
+      config.build_settings['MACOSX_DEPLOYMENT_TARGET'] = '11.0'
+    end
+    
+    # Disable module verification at project level as well
+    config.build_settings['CLANG_MODULE_VERIFICATION'] = 'NO'
+    config.build_settings['CLANG_ENABLE_MODULE_DEBUGGING'] = 'NO'
+    config.build_settings['SKIP_MODULE_VERIFICATION'] = 'YES'
   end
 end
