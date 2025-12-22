@@ -194,7 +194,6 @@
 			buildPhases = (
 				3E5DD3E0E7344EBD4F16335F /* [CP] Check Pods Manifest.lock */,
 				215EBB0A053644D193FB49DD /* Ensure Release xcfilelist files exist */,
-				960F59FF16D045ED951BD9EB /* Sync Podfile.lock and Manifest.lock */,
 				9740EEB61CF901F6004384FC /* Run Script */,
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
@@ -388,28 +387,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		960F59FF16D045ED951BD9EB /* Sync Podfile.lock and Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-			);
-			name = "Sync Podfile.lock and Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Ensure Manifest.lock exists and matches Podfile.lock\n# This prevents 'The sandbox is not in sync with the Podfile.lock' error\n\nPODFILE_LOCK=\"${PODS_PODFILE_DIR_PATH}/Podfile.lock\"\nMANIFEST_LOCK=\"${PODS_ROOT}/Manifest.lock\"\n\n# Debug output\necho \"🔍 Syncing Podfile.lock and Manifest.lock...\"\necho \"   PODS_PODFILE_DIR_PATH: ${PODS_PODFILE_DIR_PATH}\"\necho \"   PODS_ROOT: ${PODS_ROOT}\"\n\nif [ -f \"$PODFILE_LOCK\" ]; then\n    # Ensure Pods directory exists\n    mkdir -p \"${PODS_ROOT}\"\n    \n    # Copy Podfile.lock to Manifest.lock\n    cp \"$PODFILE_LOCK\" \"$MANIFEST_LOCK\"\n    \n    # Verify the copy succeeded\n    if [ -f \"$MANIFEST_LOCK\" ]; then\n        echo \"✅ Successfully synced Podfile.lock to Manifest.lock\"\n        # Verify they match\n        if diff -q \"$PODFILE_LOCK\" \"$MANIFEST_LOCK\" > /dev/null 2>&1; then\n            echo \"✅ Podfile.lock and Manifest.lock are in sync\"\n        else\n            echo \"⚠️  Warning: Files copied but don't match, retrying...\"\n            cp \"$PODFILE_LOCK\" \"$MANIFEST_LOCK\"\n        fi\n    else\n        echo \"❌ Error: Failed to create Manifest.lock\"\n        exit 1\n    fi\nelse\n    echo \"⚠️  Warning: Podfile.lock not found at $PODFILE_LOCK\"\n    echo \"   This may be normal if pods haven't been installed yet\"\nfi\n";
-			showEnvVarsInLog = 0;
-		};
 		9740EEB61CF901F6004384FC /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -533,11 +510,23 @@
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				"CURRENT_PROJECT_VERSION[sdk=*]" = "$(FLUTTER_BUILD_NUMBER)";
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = U88T3SPD73;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PODS_ROOT)",
+					"$(FLUTTER_FRAMEWORK_DIR)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PODS_ROOT)/Headers/Public",
+					"$(PODS_ROOT)/Headers/Private",
+				);
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "MT Diablo";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
@@ -721,12 +710,24 @@
 			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/RunnerDebug.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				"CURRENT_PROJECT_VERSION[sdk=*]" = "$(FLUTTER_BUILD_NUMBER)";
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = U88T3SPD73;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PODS_ROOT)",
+					"$(FLUTTER_FRAMEWORK_DIR)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PODS_ROOT)/Headers/Public",
+					"$(PODS_ROOT)/Headers/Private",
+				);
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "MT Diablo";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
@@ -748,15 +749,25 @@
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/RunnerRelease.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				"CURRENT_PROJECT_VERSION[sdk=*]" = "$(FLUTTER_BUILD_NUMBER)";
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = U88T3SPD73;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PODS_ROOT)",
+					"$(FLUTTER_FRAMEWORK_DIR)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PODS_ROOT)/Headers/Public",
+					"$(PODS_ROOT)/Headers/Private",
+				);
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "MT Diablo";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";

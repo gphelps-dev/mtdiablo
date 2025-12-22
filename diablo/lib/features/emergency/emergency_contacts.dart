@@ -128,15 +128,15 @@ class _EmergencyContactsScreenState extends State<EmergencyContactsScreen> {
           ),
           const SizedBox(height: 4),
           Text(
-            'Latitude: ${_currentPosition!.latitude.toStringAsFixed(6)}',
+                    'Latitude: ${_currentPosition!.latitude.toStringAsFixed(6)}',
             style: const TextStyle(fontSize: 12),
           ),
           Text(
-            'Longitude: ${_currentPosition!.longitude.toStringAsFixed(6)}',
+                    'Longitude: ${_currentPosition!.longitude.toStringAsFixed(6)}',
             style: const TextStyle(fontSize: 12),
           ),
           Text(
-            'Accuracy: ${_currentPosition!.accuracy.toStringAsFixed(1)} meters',
+                    'Accuracy: ${_currentPosition!.accuracy.toStringAsFixed(1)} meters',
             style: const TextStyle(fontSize: 12),
           ),
         ],

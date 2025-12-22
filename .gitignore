@@ -60,3 +60,6 @@ linux/Flutter/ephemeral/
 
 # Packages and dependencies
 pubspec.lock
+diablo/macos/Runner*/Products/
+*.dSYM/
+*.app/
