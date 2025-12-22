@@ -275,6 +275,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		0D480E85EACEE99C1D351F63 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -307,7 +308,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Ensure Release xcfilelist files exist before CocoaPods tries to read them\nset -e\nRELEASE_DIR=\"${PODS_ROOT}/Target Support Files/Pods-Runner\"\nmkdir -p \"$RELEASE_DIR\"\n\n# List of Release xcfilelist files we need\nRELEASE_FILES=(\n    \"Pods-Runner-resources-Release-input-files.xcfilelist\"\n    \"Pods-Runner-resources-Release-output-files.xcfilelist\"\n    \"Pods-Runner-frameworks-Release-input-files.xcfilelist\"\n    \"Pods-Runner-frameworks-Release-output-files.xcfilelist\"\n)\n\n# Create Release files from Debug/Profile templates if they don't exist\nfor release_file in \"${RELEASE_FILES[@]}\"; do\n    release_path=\"$RELEASE_DIR/$release_file\"\n    \n    # Always ensure file exists and is valid\n    if [ ! -f \"$release_path\" ] || [ ! -s \"$release_path\" ]; then\n        # Try Debug first\n        debug_file=$(echo \"$release_file\" | sed 's/-Release-/-Debug-/')\n        debug_path=\"$RELEASE_DIR/$debug_file\"\n        if [ -f \"$debug_path\" ] && [ -s \"$debug_path\" ]; then\n            cp \"$debug_path\" \"$release_path\"\n        else\n            # Try Profile\n            profile_file=$(echo \"$release_file\" | sed 's/-Release-/-Profile-/')\n            profile_path=\"$RELEASE_DIR/$profile_file\"\n            if [ -f \"$profile_path\" ] && [ -s \"$profile_path\" ]; then\n                cp \"$profile_path\" \"$release_path\"\n            else\n                # Create empty file (xcfilelist files can be empty)\n                echo \"\" > \"$release_path\"\n            fi\n        fi\n        chmod 644 \"$release_path\"\n    fi\n    \n    # Final verification - file must exist\n    if [ ! -f \"$release_path\" ]; then\n        echo \"Error: Failed to create $release_path\"\n        exit 1\n    fi\n    \n    # Ensure file is readable\n    chmod 644 \"$release_path\"\ndone\n";
+			shellScript = "# Ensure Release xcfilelist files exist before CocoaPods tries to read them\n# Don't use set -e to avoid failing if files don't exist yet\nRELEASE_DIR=\"${PODS_ROOT}/Target Support Files/Pods-Runner\"\nmkdir -p \"$RELEASE_DIR\" 2>/dev/null || true\n\n# List of Release xcfilelist files we need\nRELEASE_FILES=(\n    \"Pods-Runner-resources-Release-input-files.xcfilelist\"\n    \"Pods-Runner-resources-Release-output-files.xcfilelist\"\n    \"Pods-Runner-frameworks-Release-input-files.xcfilelist\"\n    \"Pods-Runner-frameworks-Release-output-files.xcfilelist\"\n)\n\n# Create Release files from Debug/Profile templates if they don't exist\nfor release_file in \"${RELEASE_FILES[@]}\"; do\n    release_path=\"$RELEASE_DIR/$release_file\"\n    \n    # Always ensure file exists and is valid\n    if [ ! -f \"$release_path\" ] || [ ! -s \"$release_path\" ]; then\n        # Try Debug first\n        debug_file=$(echo \"$release_file\" | sed 's/-Release-/-Debug-/')\n        debug_path=\"$RELEASE_DIR/$debug_file\"\n        if [ -f \"$debug_path\" ] && [ -s \"$debug_path\" ]; then\n            cp \"$debug_path\" \"$release_path\" 2>/dev/null || true\n        else\n            # Try Profile\n            profile_file=$(echo \"$release_file\" | sed 's/-Release-/-Profile-/')\n            profile_path=\"$RELEASE_DIR/$profile_file\"\n            if [ -f \"$profile_path\" ] && [ -s \"$profile_path\" ]; then\n                cp \"$profile_path\" \"$release_path\" 2>/dev/null || true\n            else\n                # Create empty file (xcfilelist files can be empty)\n                touch \"$release_path\" 2>/dev/null || printf \"\" > \"$release_path\" 2>/dev/null || true\n            fi\n        fi\n        chmod 644 \"$release_path\" 2>/dev/null || true\n    fi\n    \n    # Final verification - ensure file exists (create empty if needed)\n    if [ ! -f \"$release_path\" ]; then\n        touch \"$release_path\" 2>/dev/null || printf \"\" > \"$release_path\" 2>/dev/null || true\n    fi\n    \n    # Ensure file is readable\n    chmod 644 \"$release_path\" 2>/dev/null || true\n    \n    # Verify file exists and is readable\n    if [ -f \"$release_path\" ] && [ -r \"$release_path\" ]; then\n        : # File exists and is readable, good\n    else\n        echo \"⚠️  Warning: Could not create or verify $release_path\" >&2\n    fi\ndone\n";
 			showEnvVarsInLog = 0;
 		};
 		3B06AD1E1E4923F5004D2608 /* Thin Binary */ = {
@@ -372,6 +373,7 @@
 		};
 		6CABC8240D819060497A94DE /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
