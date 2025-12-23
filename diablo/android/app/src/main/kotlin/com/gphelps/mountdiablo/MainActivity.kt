@@ -1,4 +1,4 @@
-package com.gphelps.mtdiablo
+package com.gphelps.mountdiablo
 
 import io.flutter.embedding.android.FlutterActivity
 
