@@ -12,13 +12,13 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
-  url_launcher: ^6.1.10
-  geolocator: ^10.1.0
-  permission_handler: ^11.0.1
+  url_launcher: ^6.3.1
+  geolocator: ^10.1.1
+  permission_handler: ^11.4.0
   http: ^1.1.0
   path_provider: ^2.1.1
-  shared_preferences: ^2.2.2
-  sqflite: ^2.3.0
+  shared_preferences: ^2.5.3
+  sqflite: ^2.4.1
 
 dev_dependencies:
   flutter_test:
