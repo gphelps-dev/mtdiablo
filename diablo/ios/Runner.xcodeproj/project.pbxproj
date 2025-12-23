@@ -532,7 +532,7 @@
 					"$(PODS_ROOT)/Headers/Private",
 				);
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "MT Diablo";
+				INFOPLIST_KEY_CFBundleDisplayName = mtdiablo;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -737,7 +737,7 @@
 					"$(PODS_ROOT)/Headers/Private",
 				);
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "MT Diablo";
+				INFOPLIST_KEY_CFBundleDisplayName = mtdiablo;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -780,7 +780,7 @@
 					"$(PODS_ROOT)/Headers/Private",
 				);
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "MT Diablo";
+				INFOPLIST_KEY_CFBundleDisplayName = mtdiablo;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
