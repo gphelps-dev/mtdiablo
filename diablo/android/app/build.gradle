@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.gphelps.mtdiablo"
+    namespace = "com.gphelps.mountdiablo"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
