@@ -2,7 +2,7 @@ name: diablo
 description: "Mount Diablo Contra Costa County - Official visitor guide and outdoor recreation app."
 publish_to: 'none' # Prevents accidental publishing to pub.dev
 
-version: 1.0.5+2
+version: 1.0.5+1
 
 environment:
   sdk: ^3.5.4
