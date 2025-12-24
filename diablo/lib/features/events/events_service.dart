@@ -9,6 +9,9 @@ class EventsService {
   static const String _cacheKey = 'cached_events';
   static const Duration _cacheExpiry = Duration(hours: 6);
 
+  // Registration URL for all events
+  static const String registrationUrl = 'https://www.reservecalifornia.com/Activities/ProgramsAndTours';
+
   // Sample events based on the website data
   // Using dates relative to today so events always show up
   static List<Event> get _sampleEvents {
@@ -21,7 +24,7 @@ class EventsService {
         date: now.add(const Duration(days: 7)),
         timeRange: '7:00 AM - 10:00 AM',
         category: 'Meditation',
-        registrationUrl: 'https://savemountdiablo.org/events/mangini-ranch-meditation-hike/',
+        registrationUrl: registrationUrl,
       ),
       Event(
         id: '2',
@@ -30,7 +33,7 @@ class EventsService {
         date: now.add(const Duration(days: 14)),
         timeRange: '9:00 AM - 12:00 PM',
         category: 'Mountain Biking',
-        registrationUrl: 'https://savemountdiablo.org/events/hit-the-trails-mountain-biking/',
+        registrationUrl: registrationUrl,
       ),
       Event(
         id: '3',
@@ -39,7 +42,7 @@ class EventsService {
         date: now.add(const Duration(days: 21)),
         timeRange: '10:00 AM - 1:00 PM',
         category: 'Art',
-        registrationUrl: 'https://savemountdiablo.org/events/plein-air-painting-hike/',
+        registrationUrl: registrationUrl,
       ),
       Event(
         id: '4',
@@ -48,7 +51,7 @@ class EventsService {
         date: now.add(const Duration(days: 28)),
         timeRange: '9:00 AM - 2:00 PM',
         category: 'Stewardship',
-        registrationUrl: 'https://savemountdiablo.org/events/dirt-workday/',
+        registrationUrl: registrationUrl,
       ),
       Event(
         id: '5',
@@ -57,7 +60,7 @@ class EventsService {
         date: now.add(const Duration(days: 35)),
         timeRange: '8:00 AM - 4:00 PM',
         category: 'BioBlitz',
-        registrationUrl: 'https://savemountdiablo.org/events/bioblitz-wildlife-survey/',
+        registrationUrl: registrationUrl,
       ),
       Event(
         id: '6',
@@ -66,7 +69,7 @@ class EventsService {
         date: now.add(const Duration(days: 42)),
         timeRange: '10:00 AM - 3:00 PM',
         category: 'Education',
-        registrationUrl: 'https://savemountdiablo.org/events/geology-hike/',
+        registrationUrl: registrationUrl,
       ),
       Event(
         id: '7',
@@ -75,7 +78,7 @@ class EventsService {
         date: now.add(const Duration(days: 3)),
         timeRange: '9:00 AM - 11:00 AM',
         category: 'Hiking',
-        registrationUrl: 'https://savemountdiablo.org/events/weekend-nature-walk/',
+        registrationUrl: registrationUrl,
       ),
       Event(
         id: '8',
@@ -84,7 +87,7 @@ class EventsService {
         date: now.add(const Duration(days: 10)),
         timeRange: '5:00 PM - 8:00 PM',
         category: 'Art',
-        registrationUrl: 'https://savemountdiablo.org/events/sunset-photography/',
+        registrationUrl: registrationUrl,
       ),
     ];
   }

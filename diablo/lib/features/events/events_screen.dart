@@ -258,16 +258,15 @@ class _EventsScreenState extends State<EventsScreen> {
                     icon: const Icon(Icons.info_outline),
                     label: const Text('Details'),
                   ),
-                  if (event.registrationUrl != null)
-                    ElevatedButton.icon(
-                      onPressed: () => _registerForEvent(event),
-                      icon: const Icon(Icons.how_to_reg),
-                      label: const Text('Register'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: event.categoryColor,
-                        foregroundColor: Colors.white,
-                      ),
+                  ElevatedButton.icon(
+                    onPressed: () => _registerForEvent(event),
+                    icon: const Icon(Icons.how_to_reg),
+                    label: const Text('Register'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: event.categoryColor,
+                      foregroundColor: Colors.white,
                     ),
+                  ),
                 ],
               ),
             ],
@@ -388,20 +387,19 @@ class _EventsScreenState extends State<EventsScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              if (event.registrationUrl != null)
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: () => _registerForEvent(event),
-                    icon: const Icon(Icons.how_to_reg),
-                    label: const Text('Register for Event'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: event.categoryColor,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () => _registerForEvent(event),
+                  icon: const Icon(Icons.how_to_reg),
+                  label: const Text('Register for Event'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: event.categoryColor,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
                 ),
+              ),
             ],
           ),
         ),
@@ -429,16 +427,16 @@ class _EventsScreenState extends State<EventsScreen> {
   }
 
   void _registerForEvent(Event event) async {
-    if (event.registrationUrl != null) {
-      final Uri uri = Uri.parse(event.registrationUrl!);
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
-      } else {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Could not open registration link')),
-          );
-        }
+    // All events register through Reserve California
+    const registrationUrl = 'https://www.reservecalifornia.com/Activities/ProgramsAndTours';
+    final Uri uri = Uri.parse(registrationUrl);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not open registration link')),
+        );
       }
     }
   }
