@@ -15,8 +15,8 @@ echo "📱 App Store Screenshot Capture"
 echo "================================"
 echo ""
 
-# Find available iPhone Pro Max simulators
-DEVICES=$(xcrun simctl list devices available | grep -E "(iPhone 15 Pro Max|iPhone 14 Pro Max|iPhone 13 Pro Max|iPhone 12 Pro Max|iPhone 11 Pro Max)" | head -1)
+# Find available iPhone Pro Max simulators (including iPhone 16/17)
+DEVICES=$(xcrun simctl list devices available | grep -E "(iPhone 17 Pro Max|iPhone 16 Pro Max|iPhone 15 Pro Max|iPhone 14 Pro Max|iPhone 13 Pro Max|iPhone 12 Pro Max|iPhone 11 Pro Max)" | head -1)
 
 if [ -z "$DEVICES" ]; then
     echo "❌ No iPhone Pro Max simulator found!"
@@ -25,9 +25,9 @@ if [ -z "$DEVICES" ]; then
     exit 1
 fi
 
-# Extract device name and UDID
-DEVICE_NAME=$(echo "$DEVICES" | sed -E 's/.*\(([^)]+)\)/\1/')
-DEVICE_UDID=$(echo "$DEVICES" | grep -oE '[A-F0-9-]{36}')
+# Extract device UDID (format: "iPhone XX Pro Max (UDID) (Status)")
+DEVICE_UDID=$(echo "$DEVICES" | grep -oE '[A-F0-9-]{36}' | head -1)
+DEVICE_NAME=$(echo "$DEVICES" | sed -E 's/.*iPhone ([^(]+).*/\1/' | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//')
 
 echo "✅ Found device: $DEVICE_NAME ($DEVICE_UDID)"
 echo ""
@@ -62,24 +62,26 @@ capture_screenshot() {
     
     echo "  📷 Capturing ${width}x${height} (${orientation})..."
     
-    # Rotate simulator if needed
-    if [ "$orientation" == "landscape" ]; then
-        xcrun simctl status_bar "$DEVICE_UDID" override --orientation landscape
-        sleep 1
-    else
-        xcrun simctl status_bar "$DEVICE_UDID" override --orientation portrait
-        sleep 1
+    # Capture screenshot at device resolution
+    TEMP_FILE="${SCREENSHOTS_DIR}/temp_${filename}"
+    xcrun simctl io "$DEVICE_UDID" screenshot "$TEMP_FILE" 2>/dev/null
+    
+    if [ ! -f "$TEMP_FILE" ]; then
+        echo "    ⚠️  Failed to capture screenshot"
+        return
     fi
     
-    # Capture screenshot
-    xcrun simctl io "$DEVICE_UDID" screenshot "${SCREENSHOTS_DIR}/${filename}" 2>/dev/null
-    
-    # Resize if needed (screenshot will be device resolution, we'll resize)
+    # Resize to exact dimensions
     if command -v sips >/dev/null 2>&1; then
-        sips -z "$height" "$width" "${SCREENSHOTS_DIR}/${filename}" --out "${SCREENSHOTS_DIR}/${filename}" >/dev/null 2>&1
-        echo "    ✅ Saved: ${filename} (${width}x${height})"
+        sips -z "$height" "$width" "$TEMP_FILE" --out "${SCREENSHOTS_DIR}/${filename}" >/dev/null 2>&1
+        rm -f "$TEMP_FILE"
+        
+        # Verify dimensions
+        ACTUAL_SIZE=$(sips -g pixelWidth -g pixelHeight "${SCREENSHOTS_DIR}/${filename}" 2>/dev/null | grep -E "pixelWidth|pixelHeight" | awk '{print $2}' | tr '\n' 'x' | sed 's/x$//')
+        echo "    ✅ Saved: ${filename} (${ACTUAL_SIZE})"
     else
-        echo "    ✅ Saved: ${filename} (may need manual resizing)"
+        mv "$TEMP_FILE" "${SCREENSHOTS_DIR}/${filename}"
+        echo "    ✅ Saved: ${filename} (may need manual resizing - sips not found)"
     fi
 }
 
