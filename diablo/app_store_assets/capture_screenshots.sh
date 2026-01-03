@@ -74,3 +74,5 @@ echo "1. Review screenshots in the folder"
 echo "2. Rename them descriptively if needed"
 echo "3. Upload to App Store Connect"
 
+
+

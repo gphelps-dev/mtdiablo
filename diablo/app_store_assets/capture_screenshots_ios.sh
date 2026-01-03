@@ -156,3 +156,5 @@ if [ ! -z "$FLUTTER_PID" ]; then
     echo "Press Ctrl+C to stop the app when done..."
 fi
 
+
+

@@ -184,3 +184,5 @@ echo ""
 echo "For landscape screenshots, rotate your device in simulator"
 echo "or use image editing software to rotate the portrait screenshots."
 
+
+
