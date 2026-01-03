@@ -32,3 +32,5 @@ Xcode Cloud workflow settings are configured in the Xcode Cloud UI, not in proje
 
 The `LastUpgradeVersion` in scheme files reflects the Xcode version used to edit the project locally, but **does not control** which Xcode version Xcode Cloud uses. You must configure this in the Xcode Cloud workflow settings.
 
+
+

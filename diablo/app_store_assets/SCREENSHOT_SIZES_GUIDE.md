@@ -77,3 +77,5 @@ convert input.png -resize 1284x2778! output-1284x2778.png
 
 I'll create a script that captures screenshots at the correct sizes automatically.
 
+
+

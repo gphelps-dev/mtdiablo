@@ -20,3 +20,5 @@ class LatLng {
   int get hashCode => latitude.hashCode ^ longitude.hashCode;
 }
 
+
+
