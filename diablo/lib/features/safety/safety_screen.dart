@@ -3,14 +3,14 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class EmergencyContactsScreen extends StatefulWidget {
-  const EmergencyContactsScreen({super.key});
+class SafetyScreen extends StatefulWidget {
+  const SafetyScreen({super.key});
 
   @override
-  State<EmergencyContactsScreen> createState() => _EmergencyContactsScreenState();
+  State<SafetyScreen> createState() => _SafetyScreenState();
 }
 
-class _EmergencyContactsScreenState extends State<EmergencyContactsScreen> {
+class _SafetyScreenState extends State<SafetyScreen> {
   Position? _currentPosition;
   bool _isLoadingLocation = false;
 
@@ -18,7 +18,7 @@ class _EmergencyContactsScreenState extends State<EmergencyContactsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Emergency'),
+        title: const Text('Safety'),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 2,
@@ -35,6 +35,8 @@ class _EmergencyContactsScreenState extends State<EmergencyContactsScreen> {
           _buildMedicalSection(),
           const SizedBox(height: 24),
           _buildSafetyTipsSection(),
+          const SizedBox(height: 24),
+          _buildMotoristWarningSection(),
         ],
       ),
     );
@@ -425,16 +427,20 @@ class _EmergencyContactsScreenState extends State<EmergencyContactsScreen> {
         _isLoadingLocation = false;
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Location obtained successfully!')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Location obtained successfully!')),
+        );
+      }
     } catch (e) {
       setState(() {
         _isLoadingLocation = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error getting location: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error getting location: $e')),
+        );
+      }
     }
   }
 
@@ -477,6 +483,106 @@ class _EmergencyContactsScreenState extends State<EmergencyContactsScreen> {
               openAppSettings();
             },
             child: const Text('Open Settings'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMotoristWarningSection() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.warning, color: Colors.red, size: 28),
+                const SizedBox(width: 8),
+                const Expanded(
+                  child: Text(
+                    'Report Unsafe Drivers',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.red[50],
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.red[200]!),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.phone, color: Colors.red[800], size: 20),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Immediately Call 911 to report an Unsafe Driver to Park Rangers',
+                          style: TextStyle(
+                            color: Colors.red[900],
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Tell the Park Ranger you wish to report an unsafe driver, and give them:',
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 12),
+            _buildWarningItem('The license plate number'),
+            _buildWarningItem('The location and time'),
+            _buildWarningItem('A description of the behavior(s) you consider unsafe'),
+            _buildWarningItem('Include photo or video if you have it'),
+            _buildWarningItem('As many of the following as possible: vehicle make, model, and driver description'),
+            _buildWarningItem('Your name, witness names(s) and phone number'),
+            const SizedBox(height: 12),
+            _buildWarningItem('Request that the Park Ranger locate and speak with the motorist in the Park'),
+            _buildWarningItem('Request a CALL BACK FROM THE PARK RANGER TO REPORT WHAT HE/SHE SAID TO THE DRIVER'),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: () => _launchURL('tel:911'),
+              icon: const Icon(Icons.phone),
+              label: const Text('Call 911'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWarningItem(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.check_circle, color: Colors.red[700], size: 18),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(fontSize: 14, height: 1.4),
+            ),
           ),
         ],
       ),

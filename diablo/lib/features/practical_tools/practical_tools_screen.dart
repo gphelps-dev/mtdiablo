@@ -238,21 +238,8 @@ class _PracticalToolsScreenState extends State<PracticalToolsScreen> {
   }
 
   void _openDirections(Amenity amenity) {
-    // Show coordinates instead of opening Apple Maps
-    final coordinates = '${amenity.location.latitude}, ${amenity.location.longitude}';
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Location: ${amenity.name}'),
-        content: SelectableText('Coordinates: $coordinates'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
-          ),
-        ],
-      ),
-    );
+    final url = 'https://www.google.com/maps/dir/?api=1&destination=${amenity.location.latitude},${amenity.location.longitude}';
+    _launchURL(url);
   }
 
   void _callAmenity(Amenity amenity) {

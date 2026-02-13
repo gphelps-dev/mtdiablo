@@ -112,89 +112,9 @@ fi
 
 cd ..
 
-# Install CocoaPods dependencies for macOS
-echo "🍫 Running pod install for macOS..."
-cd macos
-if [ -f "Podfile" ]; then
-    # Create FlutterMacOS header directory structure before pod install
-    # This fixes <FlutterMacOS/FlutterMacOS.h> import issues
-    if [ -f "create_flutter_headers_symlink.sh" ]; then
-        echo "🔧 Creating FlutterMacOS header structure..."
-        bash create_flutter_headers_symlink.sh 2>/dev/null || true
-    fi
-    
-    # Clean macOS Pods before install
-    echo "🧹 Cleaning macOS Pods..."
-    rm -rf Pods
-    rm -f Podfile.lock
-    rm -f Pods/Manifest.lock
-    
-    # Deintegrate CocoaPods completely
-    if command -v pod &> /dev/null; then
-        pod deintegrate 2>/dev/null || true
-    fi
-    
-    # Update CocoaPods repo
-    if command -v pod &> /dev/null; then
-        pod repo update 2>/dev/null || true
-    fi
-    
-    pod install --repo-update 2>/dev/null || true
-    # Fix macOS deployment target and module verification in Pods.xcodeproj if it exists
-    if [ -f "Pods/Pods.xcodeproj/project.pbxproj" ]; then
-        echo "🔧 Fixing macOS deployment target and module verification in Pods.xcodeproj..."
-        # Use sed to replace any deployment target < 10.13 with 10.13
-        # Match 10.11, 10.12, or any version < 10.13
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-            # macOS sed
-            sed -i '' -E 's/MACOSX_DEPLOYMENT_TARGET = 10\.(11|12|0[0-9]|1[0-2]);/MACOSX_DEPLOYMENT_TARGET = 10.13;/g' Pods/Pods.xcodeproj/project.pbxproj 2>/dev/null || true
-            # Also handle cases without semicolon
-            sed -i '' -E 's/MACOSX_DEPLOYMENT_TARGET = 10\.(11|12|0[0-9]|1[0-2])$/MACOSX_DEPLOYMENT_TARGET = 10.13/g' Pods/Pods.xcodeproj/project.pbxproj 2>/dev/null || true
-            
-            # Disable module verification to fix Test module errors
-            # Add CLANG_MODULE_VERIFICATION = NO if not present
-            if ! grep -q "CLANG_MODULE_VERIFICATION" Pods/Pods.xcodeproj/project.pbxproj; then
-                # Find a build configuration section and add the setting
-                sed -i '' 's/\(buildSettings = {\)/\1\
-					CLANG_MODULE_VERIFICATION = NO;/g' Pods/Pods.xcodeproj/project.pbxproj 2>/dev/null || true
-            else
-                # Replace existing CLANG_MODULE_VERIFICATION values
-                sed -i '' -E 's/CLANG_MODULE_VERIFICATION = [^;]+;/CLANG_MODULE_VERIFICATION = NO;/g' Pods/Pods.xcodeproj/project.pbxproj 2>/dev/null || true
-            fi
-            
-            # Remove VerifyModule build phases that cause Test module errors
-            echo "🔧 Removing VerifyModule build phases from Pods project..."
-            # Remove VerifyModule shell script build phases
-            perl -i -pe 'BEGIN{undef $/;} s/\/\* Begin PBXShellScriptBuildPhase section \*\/.*?\/\* VerifyModule \*\/ = \{.*?shellScript = ".*?VerifyModule.*?\n.*?\};//gsm' Pods/Pods.xcodeproj/project.pbxproj 2>/dev/null || true
-            # Also try a simpler approach - remove lines containing VerifyModule
-            sed -i '' '/VerifyModule/d' Pods/Pods.xcodeproj/project.pbxproj 2>/dev/null || true
-            
-            # Add FlutterMacOS header search paths to all pod targets
-            echo "🔧 Adding FlutterMacOS header search paths..."
-            FLUTTER_EPHEMERAL="$(pwd)/Flutter/ephemeral"
-            if [ -d "$FLUTTER_EPHEMERAL" ]; then
-                # Add to HEADER_SEARCH_PATHS in all build configurations
-                sed -i '' "s|HEADER_SEARCH_PATHS = (|HEADER_SEARCH_PATHS = (\n\t\t\t\t\"$FLUTTER_EPHEMERAL\",|g" Pods/Pods.xcodeproj/project.pbxproj 2>/dev/null || true
-            fi
-        else
-            # Linux sed
-            sed -i -E 's/MACOSX_DEPLOYMENT_TARGET = 10\.(11|12|0[0-9]|1[0-2]);/MACOSX_DEPLOYMENT_TARGET = 10.13;/g' Pods/Pods.xcodeproj/project.pbxproj 2>/dev/null || true
-            sed -i -E 's/MACOSX_DEPLOYMENT_TARGET = 10\.(11|12|0[0-9]|1[0-2])$/MACOSX_DEPLOYMENT_TARGET = 10.13/g' Pods/Pods.xcodeproj/project.pbxproj 2>/dev/null || true
-            
-            # Disable module verification
-            if ! grep -q "CLANG_MODULE_VERIFICATION" Pods/Pods.xcodeproj/project.pbxproj; then
-                sed -i 's/\(buildSettings = {\)/\1\n\t\t\t\tCLANG_MODULE_VERIFICATION = NO;/g' Pods/Pods.xcodeproj/project.pbxproj 2>/dev/null || true
-            else
-                sed -i -E 's/CLANG_MODULE_VERIFICATION = [^;]+;/CLANG_MODULE_VERIFICATION = NO;/g' Pods/Pods.xcodeproj/project.pbxproj 2>/dev/null || true
-            fi
-        fi
-    fi
-fi
-cd ..
-
-# Install CocoaPods dependencies for iOS
-echo "🍫 Running pod install for iOS..."
-cd "$CI_WORKSPACE/diablo/ios"
+# Install CocoaPods dependencies
+echo "🍫 Running pod install..."
+cd ios
 
 # Ensure CocoaPods is available
 if ! command -v pod &> /dev/null; then
@@ -230,26 +150,11 @@ fi
 # Remove existing Pods and Manifest.lock to ensure clean install
 echo "🧹 Cleaning existing Pods installation..."
 rm -rf Pods
-rm -f Podfile.lock
 rm -f Pods/Manifest.lock
-
-# Deintegrate CocoaPods completely (more thorough cleanup)
-echo "🧹 Deintegrating CocoaPods..."
-if command -v pod &> /dev/null; then
-    pod deintegrate 2>/dev/null || true
-fi
 
 # Clean CocoaPods cache
 echo "🧹 Cleaning CocoaPods cache..."
-if command -v pod &> /dev/null; then
-    pod cache clean --all 2>/dev/null || true
-fi
-
-# Update CocoaPods repo
-echo "🔄 Updating CocoaPods repo..."
-if command -v pod &> /dev/null; then
-    pod repo update 2>/dev/null || true
-fi
+pod cache clean --all 2>/dev/null || true
 
 # Install pods (this will regenerate Podfile.lock and Manifest.lock)
 echo "📦 Installing CocoaPods dependencies..."

@@ -415,41 +415,33 @@ class _InteractiveMapScreenState extends State<InteractiveMapScreen> {
     );
   }
 
-  void _openDirections(dynamic item) {
-    // Show coordinates instead of opening Apple Maps
-    String coordinates;
-    String locationName;
+  void _openDirections(dynamic item) async {
+    String url;
     
     if (item is Trail) {
+      // Use the first coordinate of the trail as the destination
       if (item.coordinates.isNotEmpty) {
         final firstCoord = item.coordinates.first;
-        coordinates = '${firstCoord.latitude}, ${firstCoord.longitude}';
-        locationName = item.name;
+        url = 'https://www.google.com/maps/dir/?api=1&destination=${firstCoord.latitude},${firstCoord.longitude}';
       } else {
-        coordinates = 'N/A';
-        locationName = item.trailhead;
+        // Fallback to trailhead name if no coordinates
+        url = 'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(item.trailhead)}';
       }
     } else if (item is Amenity) {
-      coordinates = '${item.location.latitude}, ${item.location.longitude}';
-      locationName = item.name;
+      url = 'https://www.google.com/maps/dir/?api=1&destination=${item.location.latitude},${item.location.longitude}';
     } else {
       return;
     }
     
-    if (mounted) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Location: $locationName'),
-          content: SelectableText('Coordinates: $coordinates'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Close'),
-            ),
-          ],
-        ),
-      );
+    final Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not open directions to ${item.name}')),
+        );
+      }
     }
   }
 } 

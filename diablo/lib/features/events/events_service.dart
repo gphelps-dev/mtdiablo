@@ -9,9 +9,6 @@ class EventsService {
   static const String _cacheKey = 'cached_events';
   static const Duration _cacheExpiry = Duration(hours: 6);
 
-  // Registration URL for all events
-  static const String registrationUrl = 'https://www.reservecalifornia.com/Activities/ProgramsAndTours';
-
   // Sample events based on the website data
   // Using dates relative to today so events always show up
   static List<Event> get _sampleEvents {
@@ -20,74 +17,74 @@ class EventsService {
       Event(
         id: '1',
         title: 'Mangini Ranch Meditation Hike',
-        description: 'Meditation hike through Mangini Ranch. Practice mindfulness while exploring the preserve.',
+        description: 'Join Save Mount Diablo on a meditation journey through Mangini Ranch! Experience the peaceful beauty of the preserve while practicing mindfulness in nature.',
         date: now.add(const Duration(days: 7)),
         timeRange: '7:00 AM - 10:00 AM',
         category: 'Meditation',
-        registrationUrl: registrationUrl,
+        registrationUrl: 'https://savemountdiablo.org/events/mangini-ranch-meditation-hike/',
       ),
       Event(
         id: '2',
         title: 'Hit the Trails – Mountain Biking',
-        description: 'Mountain bike ride from Smith Canyon to Curry Canyon. Explore trails in the Diablo Range.',
+        description: 'Come explore the beautiful trails from Smith Canyon into Mount Diablo\'s beautiful Curry Canyon via mountain bike. Experience the thrill of mountain biking in the Diablo Range.',
         date: now.add(const Duration(days: 14)),
         timeRange: '9:00 AM - 12:00 PM',
         category: 'Mountain Biking',
-        registrationUrl: registrationUrl,
+        registrationUrl: 'https://savemountdiablo.org/events/hit-the-trails-mountain-biking/',
       ),
       Event(
         id: '3',
         title: 'Plein Air Painting Hike',
-        description: 'Plein air painting hike on Curry Canyon Ranch. Paint the Diablo Range landscapes.',
+        description: 'Join Save Mount Diablo for a beautiful evening of plein air painting on Curry Canyon Ranch. Capture the stunning landscapes of the Diablo Range through art.',
         date: now.add(const Duration(days: 21)),
         timeRange: '10:00 AM - 1:00 PM',
         category: 'Art',
-        registrationUrl: registrationUrl,
+        registrationUrl: 'https://savemountdiablo.org/events/plein-air-painting-hike/',
       ),
       Event(
         id: '4',
         title: 'Diablo Restoration Team (DiRT) Workday',
-        description: 'Volunteer workday to restore habitats and maintain trails. Learn about native plants.',
+        description: 'Help restore native habitats and maintain trails in the Diablo Range. Learn about native plants and conservation while making a difference.',
         date: now.add(const Duration(days: 28)),
         timeRange: '9:00 AM - 2:00 PM',
         category: 'Stewardship',
-        registrationUrl: registrationUrl,
+        registrationUrl: 'https://savemountdiablo.org/events/dirt-workday/',
       ),
       Event(
         id: '5',
         title: 'BioBlitz: Wildlife Survey',
-        description: 'Wildlife survey with scientists and naturalists. Help document Mount Diablo biodiversity.',
+        description: 'Join scientists and naturalists for a day of wildlife observation and data collection. Help document the biodiversity of Mount Diablo.',
         date: now.add(const Duration(days: 35)),
         timeRange: '8:00 AM - 4:00 PM',
         category: 'BioBlitz',
-        registrationUrl: registrationUrl,
+        registrationUrl: 'https://savemountdiablo.org/events/bioblitz-wildlife-survey/',
       ),
       Event(
         id: '6',
         title: 'Discover Diablo: Geology Hike',
-        description: 'Geology hike with expert guides. Learn how Mount Diablo was formed and see unique rock formations.',
+        description: 'Learn about the fascinating geology of Mount Diablo with expert guides. Discover how the mountain was formed and its unique rock formations.',
         date: now.add(const Duration(days: 42)),
         timeRange: '10:00 AM - 3:00 PM',
         category: 'Education',
-        registrationUrl: registrationUrl,
+        registrationUrl: 'https://savemountdiablo.org/events/geology-hike/',
       ),
       Event(
         id: '7',
         title: 'Weekend Nature Walk',
-        description: 'Guided nature walk through Mount Diablo State Park. Good for families.',
+        description: 'Join us for a guided nature walk through Mount Diablo State Park. Perfect for families and nature enthusiasts of all ages.',
         date: now.add(const Duration(days: 3)),
         timeRange: '9:00 AM - 11:00 AM',
         category: 'Hiking',
-        registrationUrl: registrationUrl,
+        registrationUrl: 'https://savemountdiablo.org/events/weekend-nature-walk/',
       ),
       Event(
         id: '8',
         title: 'Sunset Photography Workshop',
-        description: 'Sunset photography workshop at the summit. Learn techniques and enjoy the views.',
+        description: 'Capture stunning sunset views from Mount Diablo summit. Learn photography techniques while enjoying breathtaking scenery.',
         date: now.add(const Duration(days: 10)),
         timeRange: '5:00 PM - 8:00 PM',
         category: 'Art',
-        registrationUrl: registrationUrl,
+        registrationUrl: 'https://savemountdiablo.org/events/sunset-photography/',
       ),
     ];
   }
