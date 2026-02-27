@@ -77,7 +77,7 @@ class WeatherScreen extends StatelessWidget {
               Icons.landscape,
               Colors.orange,
               'https://mesowest.utah.edu/cgi-bin/droman/meso_base.cgi?stn=SJS02',
-              webcamUrl,
+              'https://ops.alertcalifornia.org/cam-console/2156',
             ),
             const SizedBox(height: 12),
             _buildWeatherStationTile(
@@ -138,7 +138,7 @@ class WeatherScreen extends StatelessWidget {
               Icons.landscape,
               Colors.purple,
               'https://map.purpleair.com/?opt=1/mAQI/a10/cC0&key=WZRAE0D746KP9G67&select=91079#11/37.8817/-121.9146',
-              webcamUrl,
+              'https://ops.alertcalifornia.org/cam-console/2156',
             ),
             const SizedBox(height: 12),
             _buildAirQualityTile(
